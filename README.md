@@ -37,9 +37,13 @@ It evaluates critical Kernel parameters, hardware mitigations, and system-level 
 
 LinSpec is the first component of a specialized three-stage forensic workflow:
 
-[![Tool-LinSpec](https://img.shields.io/badge/Stage%201-LinSpec%20(Audit)-00599C?style=flat-square&logo=linux&logoColor=white)](#-linspec)
-[![Tool-SIREN](https://img.shields.io/badge/Stage%202-S.I.R.E.N%20(Acquisition)-444444?style=flat-square&logo=linux&logoColor=white)](https://github.com/jeffersoncesarantunes/S.I.R.E.N)
-[![Tool-KScanner](https://img.shields.io/badge/Stage%203-K--Scanner%20(Analysis)-CC0000?style=flat-square&logo=linux&logoColor=white)](https://github.com/jeffersoncesarantunes/K-Scanner)
+## ● The Forensic Ecosystem
+
+LinSpec is the first component of a specialized three-stage forensic workflow:
+
+[![Tool-LinSpec](https://img.shields.io/badge/Stage%201-LinSpec%20(Audit)-002B36?style=flat-square&logo=linux&logoColor=white)](#-linspec)
+[![Tool-SIREN](https://img.shields.io/badge/Stage%202-S.I.R.E.N%20(Acquisition)-006400?style=flat-square&logo=linux&logoColor=white)](https://github.com/jeffersoncesarantunes/S.I.R.E.N)
+[![Tool-KScanner](https://img.shields.io/badge/Stage%203-K--Scanner%20(Analysis)-003366?style=flat-square&logo=linux&logoColor=white)](https://github.com/jeffersoncesarantunes/K-Scanner)
 
 ---
 
@@ -175,10 +179,10 @@ sudo ./linspec
 
 ## ● Documentation
 
-[![Docs-Architecture](https://img.shields.io/badge/Architecture--Design-00599C?style=flat-square&logo=linux&logoColor=white)](./docs/architecture.md)
-[![Docs-Methodology](https://img.shields.io/badge/Forensic--Methodology-444444?style=flat-square&logo=gnu-bash&logoColor=white)](./docs/forensic_methodology.md)
-[![Docs-Reference](https://img.shields.io/badge/Audit--Reference-228B22?style=flat-square&logo=c&logoColor=white)](./docs/audit_reference.md)
-[![Docs-ThreatModel](https://img.shields.io/badge/Threat--Model-CC0000?style=flat-square&logo=opensourceinitiative&logoColor=white)](./docs/threat_model.md)
+[![Docs-Architecture](https://img.shields.io/badge/Architecture--Design-002B36?style=flat-square&logo=linux&logoColor=white)](./docs/architecture.md)
+[![Docs-Methodology](https://img.shields.io/badge/Forensic--Methodology-006400?style=flat-square&logo=fortinet&logoColor=white)](./docs/forensic_methodology.md)
+[![Docs-Reference](https://img.shields.io/badge/Audit--Reference-003366?style=flat-square&logo=gitbook&logoColor=white)](./docs/audit_reference.md)
+[![Docs-ThreatModel](https://img.shields.io/badge/Threat--Model-800000?style=flat-square&logo=dependabot&logoColor=white)](./docs/threat_model.md)
 
 ---
 
