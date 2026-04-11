@@ -188,6 +188,6 @@ sudo ./linspec
 
 ## ● License
 
-[![License-MIT](https://img.shields.io/badge/License-MIT-BD93F9?style=flat-square&logo=scales&logoColor=white)](./LICENSE)
+[![License-MIT](https://img.shields.io/badge/License-MIT-BD93F9?style=flat-square&logo=balance-scale&logoColor=white)](./LICENSE)
 
 *This project is licensed under the MIT License.*
