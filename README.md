@@ -37,9 +37,14 @@ It evaluates critical Kernel parameters, hardware mitigations, and system-level 
 
 LinSpec is the first component of a specialized three-stage forensic workflow:
 
-1.  **LinSpec (Audit):** Diagnoses the kernel's defensive state and identifies vulnerabilities.
-2.  **[S.I.R.E.N](https://github.com/jeffersoncesarantunes/S.I.R.E.N):** Performs controlled memory acquisition based on the audit's context.
-3.  **[K-Scanner](https://github.com/jeffersoncesarantunes/K-Scanner):** Scans the acquired memory/active processes for RWX anomalies and shellcodes.
+1. [![Tool-LinSpec](https://img.shields.io/badge/Stage%201-LinSpec%20(Audit)-00599C?style=flat-square&logo=linux&logoColor=white)](#-linspec)  
+   Diagnoses the kernel's defensive state and identifies vulnerabilities.
+
+2. [![Tool-SIREN](https://img.shields.io/badge/Stage%202-S.I.R.E.N%20(Acquisition)-444444?style=flat-square&logo=git&logoColor=white)](https://github.com/jeffersoncesarantunes/S.I.R.E.N)  
+   Performs controlled memory acquisition based on the audit's context.
+
+3. [![Tool-KScanner](https://img.shields.io/badge/Stage%203-K--Scanner%20(Analysis)-CC0000?style=flat-square&logo=target&logoColor=white)](https://github.com/jeffersoncesarantunes/K-Scanner)  
+   Scans the acquired memory/active processes for RWX anomalies and shellcodes.
 
 ---
 
