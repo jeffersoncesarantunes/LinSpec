@@ -135,6 +135,9 @@ sudo ./linspec
 │   ├── audit_reference.md
 │   ├── forensic_methodology.md
 │   └── threat_model.md
+├── Imagens/
+│   ├── linspec1.png
+│   └── linspec2.png
 ├── include/
 ├── scripts/
 ├── src/
@@ -142,6 +145,7 @@ sudo ./linspec
 │   ├── main.c
 │   ├── memory_audit.c
 │   └── system_audit.c
+├── .gitignore
 ├── LICENSE
 ├── Makefile
 └── README.md
