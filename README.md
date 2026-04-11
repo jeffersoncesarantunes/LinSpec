@@ -72,6 +72,16 @@ Steps:
 
 ---
 
+## ● Project in Action
+
+![System Audit Overview](./Imagens/linspec1.png)  
+*1 - System Audit Overview. Clean compilation and execution of the forensic engine, performing the initial security baseline triage.*
+
+![Forensic Validation via Tmux](./Imagens/linspec2.png)  
+*2 - Forensic Validation via Tmux. Cross-referencing LinSpec output with manual inspection of /proc and /sys interfaces to confirm audit accuracy.*
+
+---
+
 ## ● Features
 
 - Real-time Kernel auditing    
