@@ -37,10 +37,6 @@ It evaluates critical Kernel parameters, hardware mitigations, and system-level 
 
 LinSpec is the first component of a specialized three-stage forensic workflow:
 
-## ● The Forensic Ecosystem
-
-LinSpec is the first component of a specialized three-stage forensic workflow:
-
 [![Tool-LinSpec](https://img.shields.io/badge/Stage%201-LinSpec%20(Audit)-002B36?style=flat-square&logo=linux&logoColor=white)](#-linspec)
 [![Tool-SIREN](https://img.shields.io/badge/Stage%202-S.I.R.E.N%20(Acquisition)-006400?style=flat-square&logo=linux&logoColor=white)](https://github.com/jeffersoncesarantunes/S.I.R.E.N)
 [![Tool-KScanner](https://img.shields.io/badge/Stage%203-K--Scanner%20(Analysis)-003366?style=flat-square&logo=linux&logoColor=white)](https://github.com/jeffersoncesarantunes/K-Scanner)
