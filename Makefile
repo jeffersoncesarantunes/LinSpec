@@ -1,8 +1,14 @@
 CC=gcc
 CFLAGS=-Isrc -Wall
+TARGET=linspec
+SRC=src/main.c src/memory_audit.c src/system_audit.c
 
-linspec: src/main.c src/memory_audit.c src/system_audit.c
-	$(CC) $(CFLAGS) -o linspec src/main.c src/memory_audit.c src/system_audit.c
+$(TARGET): $(SRC)
+	@$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+	@echo " ✅ Build complete: $(TARGET)"
 
 clean:
-	rm -f linspec
+	@rm -f $(TARGET)
+	@echo " 🧹 Cleaned up binary"
+
+.PHONY: clean
