@@ -139,7 +139,7 @@ cat report.json | grep -A 4 "summary"
 
 ```bash
 # Proof of Kernel Pointer Restriction (addresses should be zeroed)
-cat /proc/kallsyms | head -n 5
+cat /proc/kallsyms | head -n 10
 
 # Checking active sandboxing and boot parameters
 sysctl kernel.unprivileged_userns_clone
