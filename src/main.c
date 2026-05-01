@@ -29,5 +29,7 @@ int main() {
     printf("| [!] Audit finished. Security baseline report generated.                       |\n");
     printf("+-------------------------------------------------------------------------------+\n");
 
+    export_reports(p, w, v);
+
     return 0;
 }
