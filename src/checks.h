@@ -23,4 +23,6 @@ void check_entropy(int *p, int *w);
 void check_spectre_v2(int *p, int *v, int *w);
 void check_meltdown(int *p, int *v, int *w);
 
+void export_reports(int p, int w, int v);
+
 #endif

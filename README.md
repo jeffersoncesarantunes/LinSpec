@@ -72,20 +72,61 @@ Steps:
 
 ---
 
+## ● Forensic Artifacts
+
+After execution, LinSpec automatically generates structured reports for external analysis:
+
+- `report.json`: Machine-readable data for automated forensic pipelines and **S.I.R.E.N** integration.
+- `report.csv`: Tabular data for spreadsheet analysis and documentation.
+
+---
+
 ## ● Project in Action
 
 ![System Audit Overview](./Imagens/linspec1.png)  
 *1 - System Audit Overview. Clean compilation and execution of the forensic engine, performing the initial security baseline triage.*
 
-![Forensic Validation via Tmux](./Imagens/linspec2.png)  
-*2 - Forensic Validation via Tmux. Cross-referencing LinSpec output with manual inspection of /proc and /sys interfaces to confirm audit accuracy.*
+![Data Integrity & Reporting](./Imagens/linspec2.png)  
+*2 - Data Integrity & Reporting. Cross-referencing terminal output with generated JSON/CSV reports to ensure data consistency and structural integrity.*
+
+![Forensic Kernel Validation](./Imagens/linspec3.png)  
+*3 - Forensic Kernel Validation. Deep-dive validation between LinSpec findings and live kernel state through /proc/kallsyms, sysctl interfaces, and boot parameters.*
+
+---
+
+## ● Technical Validation & Evidence
+
+To confirm the audit's accuracy, the following commands can be used to manually verify the forensic artifacts and the live kernel state:
+
+**1. Verifying Structured Reports:**
+
+```bash
+# Preview CSV report in tabular format
+column -s, -t < report.csv
+
+# Extract audit summary from JSON report
+cat report.json | grep -A 4 "summary"
+```
+
+**2. Verifying Kernel Constraints:**
+
+```bash
+# Proof of Kernel Pointer Restriction (addresses should be zeroed)
+cat /proc/kallsyms | head -n 5
+
+# Checking active sandboxing and boot parameters
+sysctl kernel.unprivileged_userns_clone
+sysctl kernel.kexec_load_disabled
+cat /proc/cmdline
+```
 
 ---
 
 ## ● Features
 
-- Real-time Kernel auditing    
+- Real-time Kernel auditing      
 - CPU vulnerability detection  
+- **Forensic Data Export (JSON/CSV)**  
 - Minimalist terminal UI  
 - Pure C99 (no dependencies)  
 - PASS / WARN / VULN reporting  
@@ -95,9 +136,8 @@ Steps:
 
 ## ● Operational Integrity
 
-- Passive audit (no changes)  
-- Read-only access  
-- Stateless execution  
+- **Passive Audit Mode:** Current version performs non-intrusive inspection (read-only).
+- **Stateless execution:** No system configurations are modified during the audit.  
 
 ---
 
@@ -137,15 +177,16 @@ sudo ./linspec
 │   └── threat_model.md
 ├── Imagens/
 │   ├── linspec1.png
-│   └── linspec2.png
+│   ├── linspec2.png
+│   └── linspec3.png
 ├── include/
-├── scripts/
 ├── src/
 │   ├── checks.h
 │   ├── main.c
 │   ├── memory_audit.c
 │   └── system_audit.c
-├── .gitignore
+├── report.csv
+├── report.json
 ├── LICENSE
 ├── Makefile
 └── README.md
@@ -161,14 +202,14 @@ sudo ./linspec
 - **Target Platforms:** Linux Kernel 4.x, 5.x, 6.x    
 
 ---
-<a name="roadmap"></a>
+
 ## ● Roadmap
 
 - [x] High-performance C99 Core Engine
 - [x] Side-channel Vulnerability Detection (Spectre/Meltdown)
 - [x] Brutalist-inspired Terminal UI
+- [x] Structured Output (JSON/CSV Export for Forensics)
 - [ ] Automated Remediation (System Hardening Scripts)
-- [ ] Structured Output (JSON/CSV Export for Forensics)
 - [ ] Ecosystem Integration (Pre-acquisition Audit for S.I.R.E.N)
 
 ---
