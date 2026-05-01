@@ -94,6 +94,14 @@ After execution, LinSpec automatically generates structured reports for external
 
 ---
 
+## ● Investigation Workflow
+
+1. Entry point analysis (`ptrace`)
+2. `KASLR` validation
+3. CPU trust verification
+
+---
+
 ## ● Build and Run
 
 ```bash
@@ -109,15 +117,6 @@ make clean && make
 # 4. Run with root privileges for full access
 sudo ./linspec
 ```
-
----
-
-
-## ● Investigation Workflow
-
-1. Entry point analysis (`ptrace`)
-2. `KASLR` validation
-3. CPU trust verification
 
 ---
 
