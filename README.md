@@ -94,6 +94,33 @@ After execution, LinSpec automatically generates structured reports for external
 
 ---
 
+## ● Build and Run
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/jeffersoncesarantunes/LinSpec.git
+
+# 2. Enter the directory
+cd LinSpec
+
+# 3. Compile the project
+make clean && make
+
+# 4. Run with root privileges for full access
+sudo ./linspec
+```
+
+---
+
+
+## ● Investigation Workflow
+
+1. Entry point analysis (`ptrace`)
+2. `KASLR` validation
+3. CPU trust verification
+
+---
+
 ## ● Technical Validation & Evidence
 
 To confirm the audit's accuracy, the following commands can be used to manually verify the forensic artifacts and the live kernel state:
@@ -137,33 +164,7 @@ cat /proc/cmdline
 ## ● Operational Integrity
 
 - **Passive Audit Mode:** Current version performs non-intrusive inspection (read-only).
-- **Stateless execution:** No system configurations are modified during the audit.  
-
----
-
-## ● Build and Run
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/jeffersoncesarantunes/LinSpec.git
-
-# 2. Enter the directory
-cd LinSpec
-
-# 3. Compile the project
-make clean && make
-
-# 4. Run with root privileges for full access
-sudo ./linspec
-```
-
----
-
-## ● Investigation Workflow
-
-1. Entry point analysis (`ptrace`)  
-2. `KASLR` validation  
-3. CPU trust verification  
+- **Stateless execution:** No system configurations are modified during the audit 
 
 ---
 
