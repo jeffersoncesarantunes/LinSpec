@@ -2,7 +2,7 @@
 
 ## ● Overview
 
-LinSpec is a modular, high-performance C-based auditing tool designed for real-time kernel hardening verification and forensic triage.
+LinSpec is a modular, high-performance C-based auditing tool designed for real-time kernel hardening verification and forensic triage. It serves as the intelligence layer for the forensic ecosystem.
 
 ---
 
@@ -40,7 +40,16 @@ LinSpec follows a **Passive Inspection** model, interfacing directly with:
 1. **Initialization**: Setup of environment and forensic baseline parameters.
 2. **Data Collection**: Sequential reading of kernel and hardware interfaces.
 3. **Logic Evaluation**: Comparison of live state against the defined security standard.
-4. **Report Generation**: Simultaneous output to terminal (UI) and structured files (JSON/CSV).
+4. **Report Generation**: Output to terminal UI and export of the **Audit Contract** (JSON/CSV).
+
+---
+
+## ● The Audit Contract (Integration Layer)
+
+The primary architectural output of LinSpec is the `report.json` file. This file acts as a technical contract for the ecosystem:
+
+- **S.I.R.E.N Integration**: The acquisition engine parses this JSON to detect Kernel Lockdown or restricted pointers, automatically adjusting its extraction method (/dev/mem vs /proc/kcore).
+- **K-Scanner Integration**: Provides the analysis layer with the ASLR/KASLR state, enabling precise memory offset calculations during pattern matching.
 
 ---
 
@@ -52,8 +61,4 @@ LinSpec follows a **Passive Inspection** model, interfacing directly with:
 
 ---
 
-## ● Ecosystem Integration
-
-LinSpec is designed to work in synergy with the following tools:
-- **S.I.R.E.N**: Provides the initial audit report to guide evidence acquisition.
-- **K-Scanner**: Informs the analysis phase about kernel memory protection status.
+*LinSpec is designed to be the foundational intelligence provider for automated forensic pipelines.*
