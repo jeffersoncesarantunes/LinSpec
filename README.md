@@ -76,7 +76,8 @@ Steps:
 
 After execution, LinSpec automatically generates structured reports for external analysis:
 
-- `report.json`: Machine-readable data for automated forensic pipelines and **S.I.R.E.N** integration.
+- `report.json`: Machine-readable data for automated forensic pipelines.
+  > **● Ecosystem Symbiosis:** This file acts as the primary data source for **S.I.R.E.N**, enabling adaptive memory acquisition based on the kernel's hardening state detected during audit.
 - `report.csv`: Tabular data for spreadsheet analysis and documentation.
 
 ---
@@ -209,8 +210,9 @@ cat /proc/cmdline
 - [x] Side-channel Vulnerability Detection (Spectre/Meltdown)
 - [x] Brutalist-inspired Terminal UI
 - [x] Structured Output (JSON/CSV Export for Forensics)
+- [x] **Ecosystem Integration (Pre-acquisition Audit for S.I.R.E.N)**
 - [ ] Automated Remediation (System Hardening Scripts)
-- [ ] Ecosystem Integration (Pre-acquisition Audit for S.I.R.E.N)
+- [ ] K-Scanner Deep Integration (Post-audit pattern matching)
 
 ---
 
