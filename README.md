@@ -77,7 +77,7 @@ Steps:
 After execution, LinSpec automatically generates structured reports for external analysis:
 
 - `report.json`: Machine-readable data for automated forensic pipelines.
-  > **● Ecosystem Symbiosis:** This file acts as the primary data source for **S.I.R.E.N**, enabling adaptive memory acquisition based on the kernel's hardening state detected during audit.
+ - **● Ecosystem Symbiosis:** This file acts as the primary data source for **S.I.R.E.N**, enabling adaptive memory acquisition based on the kernel's hardening state detected during audit.
 - `report.csv`: Tabular data for spreadsheet analysis and documentation.
 
 ---
