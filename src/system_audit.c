@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "checks.h"
 
 typedef struct {
@@ -19,7 +21,7 @@ typedef struct {
     int meltdown;
 } AuditResults;
 
-AuditResults results;
+static AuditResults results;
 
 void print_result(int id, const char *cat, const char *desc, const char *symbol, const char *color, const char *status) {
     printf("    [ %02d ]  %-7s >  %-35s %s%s%s [  %-5s%s ]\n", 
@@ -221,16 +223,17 @@ void check_meltdown(int *p, int *v, int *w) {
 }
 
 void export_reports(int p, int w, int v) {
-    FILE *csv = fopen("report.csv", "w");
+    mkdir("reports", 0777);
+    FILE *csv = fopen("reports/report.csv", "w");
     if (csv) {
         fprintf(csv, "Category,Status_Count\n");
         fprintf(csv, "PASS,%d\n", p);
         fprintf(csv, "WARN,%d\n", w);
         fprintf(csv, "VULN,%d\n", v);
         fclose(csv);
-        printf("\n    " GRN "●" RESET " CSV report generated: report.csv\n");
+        printf("\n    " GRN "●" RESET " CSV report generated: reports/report.csv\n");
     }
-    FILE *json = fopen("report.json", "w");
+    FILE *json = fopen("reports/report.json", "w");
     if (json) {
         time_t now; time(&now);
         fprintf(json, "{\n  \"audit_info\": {\n    \"tool\": \"LinSpec\",\n    \"timestamp\": %ld\n  },\n", (long)now);
@@ -245,6 +248,6 @@ void export_reports(int p, int w, int v) {
         fprintf(json, "  },\n");
         fprintf(json, "  \"summary\": {\n    \"pass\": %d,\n    \"warn\": %d,\n    \"vuln\": %d\n  }\n}\n", p, w, v);
         fclose(json);
-        printf("    " GRN "●" RESET " JSON report generated: report.json\n\n");
+        printf("    " GRN "●" RESET " JSON report generated: reports/report.json\n\n");
     }
 }

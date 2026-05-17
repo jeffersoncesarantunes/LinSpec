@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Isrc -Wall
+CFLAGS=-Isrc -Wall -Wextra
 TARGET=linspec
 SRC=src/main.c src/memory_audit.c src/system_audit.c
 

@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 #include "checks.h"
 
 void print_mem_result(int id, const char *cat, const char *desc, const char *symbol, const char *color, const char *status) {
@@ -23,11 +22,18 @@ void check_aslr(int *p, int *v) {
 void check_dev_mem_restrict(int *p, int *v) {
     FILE *fp = fopen("/proc/sys/kernel/devmem_restrict", "r");
     if (fp) {
-        print_mem_result(12, "MEMORY", "Direct Memory Access Restriction", "[-]", BOLD RED, "VULN");
-        (*v)++;
+        int val = 0;
+        fscanf(fp, "%d", &val);
         fclose(fp);
+        if (val == 1) {
+            print_mem_result(12, "MEMORY", "Direct Memory Access Restriction", "[+]", BOLD GRN, "PASS");
+            (*p)++;
+        } else {
+            print_mem_result(12, "MEMORY", "Direct Memory Access Restriction", "[-]", BOLD RED, "VULN");
+            (*v)++;
+        }
     } else {
-        print_mem_result(12, "MEMORY", "Direct Memory Access Restriction", "[+]", BOLD GRN, "PASS");
-        (*p)++;
+        print_mem_result(12, "MEMORY", "Direct Memory Access Restriction", "[!]", BOLD YEL, "WARN");
+        (*v)++;
     }
 }
