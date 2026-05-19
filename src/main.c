@@ -3,7 +3,7 @@
 
 int main() {
     printf(BOLD "+---LinSpec---------------------------------------------------------------------+\n" RESET);
-    printf(BOLD "|    Forensic Kernel Hardening Audit                                            |\n" RESET);
+    printf("  Forensic Kernel Hardening Audit\n");
     printf(BOLD "+-------------------------------------------------------------------------------+\n\n" RESET);
 
     int p = 0, w = 0, v = 0;
@@ -25,9 +25,9 @@ int main() {
     check_meltdown(&p, &v, &w);
 
     printf(BOLD "\n+---Summary---------------------------------------------------------------------+\n" RESET);
-    printf("|   " GRN "PASS: %02d" RESET " | " YEL "WARN: %02d" RESET " | " RED "VULN: %02d" RESET "                               |\n", p, w, v);
-    printf("| [!] Audit finished. Security baseline report generated in reports/            |\n");
-    printf("+-------------------------------------------------------------------------------+\n");
+    printf("  " GRN "PASS: %02d" RESET " | " YEL "WARN: %02d" RESET " | " RED "VULN: %02d" RESET "\n", p, w, v);
+    printf("  \033[1;33m[!]\033[0m Audit finished. Security baseline report generated in reports/\n");
+    printf(BOLD "+-------------------------------------------------------------------------------+\n" RESET);
 
     export_reports(p, w, v);
 
