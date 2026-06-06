@@ -31,7 +31,10 @@ void print_result(int id, const char *cat, const char *desc, const char *symbol,
 void check_kptr_restrict(int *p, int *v) {
     FILE *fp = fopen("/proc/sys/kernel/kptr_restrict", "r");
     int val = 0;
-    if (fp) { fscanf(fp, "%d", &val); fclose(fp); }
+    if (fp) {
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
+        fclose(fp);
+    }
     results.kptr_restrict = val;
     if (val >= 1) { 
         print_result(2, "KERNEL", "Kernel Pointer Restriction", "[+]", BOLD GRN, "PASS");
@@ -45,7 +48,10 @@ void check_kptr_restrict(int *p, int *v) {
 void check_ptrace_scope(int *p, int *w) {
     FILE *fp = fopen("/proc/sys/kernel/yama/ptrace_scope", "r");
     int val = 0;
-    if (fp) { fscanf(fp, "%d", &val); fclose(fp); }
+    if (fp) {
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
+        fclose(fp);
+    }
     results.ptrace_scope = val;
     if (val >= 1) { 
         print_result(3, "SYSTEM", "Yama Ptrace Scope Protection", "[+]", BOLD GRN, "PASS");
@@ -59,7 +65,10 @@ void check_ptrace_scope(int *p, int *w) {
 void check_dmesg_restrict(int *p, int *v) {
     FILE *fp = fopen("/proc/sys/kernel/dmesg_restrict", "r");
     int val = 0;
-    if (fp) { fscanf(fp, "%d", &val); fclose(fp); }
+    if (fp) {
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
+        fclose(fp);
+    }
     results.dmesg_restrict = val;
     if (val == 1) { 
         print_result(4, "KERNEL", "Kernel Log Dmesg Restriction", "[+]", BOLD GRN, "PASS");
@@ -73,7 +82,10 @@ void check_dmesg_restrict(int *p, int *v) {
 void check_bpf_jit(int *p, int *w) {
     FILE *fp = fopen("/proc/sys/net/core/bpf_jit_harden", "r");
     int val = 0;
-    if (fp) { fscanf(fp, "%d", &val); fclose(fp); }
+    if (fp) {
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
+        fclose(fp);
+    }
     results.bpf_jit = val;
     if (val == 2) { 
         print_result(5, "NETWORK", "BPF JIT Compiler Hardening", "[+]", BOLD GRN, "PASS");
@@ -87,7 +99,10 @@ void check_bpf_jit(int *p, int *w) {
 void check_tcp_syncookies(int *p, int *w) {
     FILE *fp = fopen("/proc/sys/net/ipv4/tcp_syncookies", "r");
     int val = 0;
-    if (fp) { fscanf(fp, "%d", &val); fclose(fp); }
+    if (fp) {
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
+        fclose(fp);
+    }
     results.syncookies = val;
     if (val == 1) { 
         print_result(6, "NETWORK", "TCP SYN Flood Protection (Cookies)", "[+]", BOLD GRN, "PASS");
@@ -101,7 +116,10 @@ void check_tcp_syncookies(int *p, int *w) {
 void check_unprivileged_userns(int *p, int *w) {
     FILE *fp = fopen("/proc/sys/kernel/unprivileged_userns_clone", "r");
     int val = 0;
-    if (fp) { fscanf(fp, "%d", &val); fclose(fp); }
+    if (fp) {
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
+        fclose(fp);
+    }
     results.userns = val;
     if (val == 0) { 
         print_result(7, "SYSTEM", "Unprivileged User Namespaces", "[+]", BOLD GRN, "PASS");
@@ -115,7 +133,10 @@ void check_unprivileged_userns(int *p, int *w) {
 void check_ip_forwarding(int *p, int *v) {
     FILE *fp = fopen("/proc/sys/net/ipv4/ip_forward", "r");
     int val = 0;
-    if (fp) { fscanf(fp, "%d", &val); fclose(fp); }
+    if (fp) {
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
+        fclose(fp);
+    }
     results.ip_fwd = val;
     if (val == 0) { 
         print_result(8, "NETWORK", "IPv4 Packet Forwarding (Routing)", "[+]", BOLD GRN, "PASS");
@@ -129,7 +150,10 @@ void check_ip_forwarding(int *p, int *v) {
 void check_protected_symlinks(int *p, int *v) {
     FILE *fp = fopen("/proc/sys/fs/protected_symlinks", "r");
     int val = 0;
-    if (fp) { fscanf(fp, "%d", &val); fclose(fp); }
+    if (fp) {
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
+        fclose(fp);
+    }
     results.symlinks = val;
     if (val == 1) { 
         print_result(9, "FS", "Protected Symlinks Restriction", "[+]", BOLD GRN, "PASS");
@@ -143,7 +167,10 @@ void check_protected_symlinks(int *p, int *v) {
 void check_protected_hardlinks(int *p, int *v) {
     FILE *fp = fopen("/proc/sys/fs/protected_hardlinks", "r");
     int val = 0;
-    if (fp) { fscanf(fp, "%d", &val); fclose(fp); }
+    if (fp) {
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
+        fclose(fp);
+    }
     results.hardlinks = val;
     if (val == 1) { 
         print_result(10, "FS", "Protected Hardlinks Restriction", "[+]", BOLD GRN, "PASS");
@@ -157,7 +184,10 @@ void check_protected_hardlinks(int *p, int *v) {
 void check_kexec_load(int *p, int *w) {
     FILE *fp = fopen("/proc/sys/kernel/kexec_load_disabled", "r");
     int val = 0;
-    if (fp) { fscanf(fp, "%d", &val); fclose(fp); }
+    if (fp) {
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
+        fclose(fp);
+    }
     results.kexec = val;
     if (val == 1) { 
         print_result(11, "KERNEL", "Kexec Kernel Image Loading", "[+]", BOLD GRN, "PASS");
@@ -171,7 +201,10 @@ void check_kexec_load(int *p, int *w) {
 void check_entropy(int *p, int *w) {
     FILE *fp = fopen("/proc/sys/kernel/random/entropy_avail", "r");
     int val = 0;
-    if (fp) { fscanf(fp, "%d", &val); fclose(fp); }
+    if (fp) {
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
+        fclose(fp);
+    }
     results.entropy = val;
     if (val > 200) { 
         print_result(13, "CRYPTO", "System Entropy Availability", "[+]", BOLD GRN, "PASS");

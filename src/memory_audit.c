@@ -9,7 +9,10 @@ void print_mem_result(int id, const char *cat, const char *desc, const char *sym
 void check_aslr(int *p, int *v) {
     FILE *fp = fopen("/proc/sys/kernel/randomize_va_space", "r");
     int val = 0;
-    if (fp) { fscanf(fp, "%d", &val); fclose(fp); }
+    if (fp) {
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
+        fclose(fp);
+    }
     if (val == 2) { 
         print_mem_result(1, "MEMORY", "Address Space Layout Randomization", "[+]", BOLD GRN, "PASS");
         (*p)++; 
@@ -23,7 +26,7 @@ void check_dev_mem_restrict(int *p, int *v) {
     FILE *fp = fopen("/proc/sys/kernel/devmem_restrict", "r");
     if (fp) {
         int val = 0;
-        fscanf(fp, "%d", &val);
+        if (fscanf(fp, "%d", &val) != 1) val = 0;
         fclose(fp);
         if (val == 1) {
             print_mem_result(12, "MEMORY", "Direct Memory Access Restriction", "[+]", BOLD GRN, "PASS");
