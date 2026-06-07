@@ -256,7 +256,7 @@ void check_meltdown(int *p, int *v, int *w) {
 }
 
 void export_reports(int p, int w, int v) {
-    mkdir("reports", 0777);
+    mkdir("reports", 0750);
     FILE *csv = fopen("reports/report.csv", "w");
     if (csv) {
         fprintf(csv, "Category,Status_Count\n");
