@@ -5,11 +5,10 @@ SRC=src/main.c src/memory_audit.c src/system_audit.c
 
 $(TARGET): $(SRC)
 	@$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
-	@echo "✔ Build successful! 🟢"
+	@echo "🟢 Build successful."
 
 clean:
-	@echo "🧹 Cleaning project artifacts..."
+	@echo "🧹 Clean."
 	@rm -f $(TARGET)
-	@echo "✔ Clean complete. 🟢"
 
 .PHONY: clean
