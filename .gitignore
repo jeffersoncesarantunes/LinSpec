@@ -7,6 +7,11 @@ linspec
 # Build
 *.out
 
+# Reports
+report.json
+report.csv
+reports/
+
 # Editor
 *~
 *.swp

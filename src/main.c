@@ -19,7 +19,6 @@ int main() {
     check_protected_symlinks(&p, &v);
     check_protected_hardlinks(&p, &v);
     check_kexec_load(&p, &w);
-    check_dev_mem_restrict(&p, &v);
     check_entropy(&p, &w);
     check_spectre_v2(&p, &v, &w);
     check_meltdown(&p, &v, &w);

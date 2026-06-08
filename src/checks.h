@@ -7,6 +7,7 @@
 #define BOLD  "\x1B[1m"
 #define RESET "\x1B[0m"
 
+void print_result(int id, const char *cat, const char *desc, const char *symbol, const char *color, const char *status);
 void check_aslr(int *p, int *v);
 void check_kptr_restrict(int *p, int *v);
 void check_ptrace_scope(int *p, int *w);
@@ -18,7 +19,6 @@ void check_ip_forwarding(int *p, int *v);
 void check_protected_symlinks(int *p, int *v);
 void check_protected_hardlinks(int *p, int *v);
 void check_kexec_load(int *p, int *w);
-void check_dev_mem_restrict(int *p, int *v);
 void check_entropy(int *p, int *w);
 void check_spectre_v2(int *p, int *v, int *w);
 void check_meltdown(int *p, int *v, int *w);

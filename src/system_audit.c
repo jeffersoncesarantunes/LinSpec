@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <errno.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "checks.h"
@@ -219,19 +220,24 @@ void check_spectre_v2(int *p, int *v, int *w) {
     FILE *fp = fopen("/sys/devices/system/cpu/vulnerabilities/spectre_v2", "r");
     char buf[256];
     results.spectre = 0;
-    if (fp && fgets(buf, sizeof(buf), fp)) {
-        if (strstr(buf, "Mitigation") || strstr(buf, "Not affected")) { 
-            print_result(14, "CPU", "Spectre V2 Mitigation Status", "[+]", BOLD GRN, "PASS");
-            (*p)++; 
-            results.spectre = 1;
-        } else { 
-            print_result(14, "CPU", "Spectre V2 Mitigation Status", "[-]", BOLD RED, "VULN");
-            (*v)++; 
+    if (fp) {
+        if (fgets(buf, sizeof(buf), fp)) {
+            if (strstr(buf, "Mitigation") || strstr(buf, "Not affected")) {
+                print_result(14, "CPU", "Spectre V2 Mitigation Status", "[+]", BOLD GRN, "PASS");
+                (*p)++;
+                results.spectre = 1;
+            } else {
+                print_result(14, "CPU", "Spectre V2 Mitigation Status", "[-]", BOLD RED, "VULN");
+                (*v)++;
+            }
+        } else {
+            print_result(14, "CPU", "Spectre V2 Mitigation Status", "[!]", BOLD YEL, "WARN");
+            (*w)++;
         }
         fclose(fp);
-    } else { 
+    } else {
         print_result(14, "CPU", "Spectre V2 Mitigation Status", "[!]", BOLD YEL, "WARN");
-        (*w)++; 
+        (*w)++;
     }
 }
 
@@ -239,36 +245,48 @@ void check_meltdown(int *p, int *v, int *w) {
     FILE *fp = fopen("/sys/devices/system/cpu/vulnerabilities/meltdown", "r");
     char buf[256];
     results.meltdown = 0;
-    if (fp && fgets(buf, sizeof(buf), fp)) {
-        if (strstr(buf, "Mitigation") || strstr(buf, "Not affected")) { 
-            print_result(15, "CPU", "Meltdown Mitigation Status", "[+]", BOLD GRN, "PASS");
-            (*p)++; 
-            results.meltdown = 1;
-        } else { 
-            print_result(15, "CPU", "Meltdown Mitigation Status", "[-]", BOLD RED, "VULN");
-            (*v)++; 
+    if (fp) {
+        if (fgets(buf, sizeof(buf), fp)) {
+            if (strstr(buf, "Mitigation") || strstr(buf, "Not affected")) {
+                print_result(15, "CPU", "Meltdown Mitigation Status", "[+]", BOLD GRN, "PASS");
+                (*p)++;
+                results.meltdown = 1;
+            } else {
+                print_result(15, "CPU", "Meltdown Mitigation Status", "[-]", BOLD RED, "VULN");
+                (*v)++;
+            }
+        } else {
+            print_result(15, "CPU", "Meltdown Mitigation Status", "[!]", BOLD YEL, "WARN");
+            (*w)++;
         }
         fclose(fp);
-    } else { 
+    } else {
         print_result(15, "CPU", "Meltdown Mitigation Status", "[!]", BOLD YEL, "WARN");
-        (*w)++; 
+        (*w)++;
     }
 }
 
 void export_reports(int p, int w, int v) {
-    mkdir("reports", 0750);
+    if (mkdir("reports", 0750) != 0 && errno != EEXIST) {
+        printf("\n    " YEL " Could not create reports directory\n");
+        return;
+    }
     FILE *csv = fopen("reports/report.csv", "w");
     if (csv) {
         fprintf(csv, "Category,Status_Count\n");
         fprintf(csv, "PASS,%d\n", p);
         fprintf(csv, "WARN,%d\n", w);
         fprintf(csv, "VULN,%d\n", v);
-        fclose(csv);
-        printf("\n    " GRN "●" RESET " CSV report generated: reports/report.csv\n");
+        if (fclose(csv) != 0) {
+            printf("\n    " YEL " Warning: CSV write may be incomplete\n");
+        } else {
+            printf("\n    " GRN "●" RESET " CSV report generated: reports/report.csv\n");
+        }
     }
     FILE *json = fopen("reports/report.json", "w");
     if (json) {
-        time_t now; time(&now);
+        time_t now = time(NULL);
+        if (now == (time_t)-1) now = 0;
         fprintf(json, "{\n  \"audit_info\": {\n    \"tool\": \"LinSpec\",\n    \"timestamp\": %ld\n  },\n", (long)now);
         fprintf(json, "  \"capabilities\": {\n");
         fprintf(json, "    \"kptr_restrict\": %d,\n", results.kptr_restrict);
@@ -280,7 +298,10 @@ void export_reports(int p, int w, int v) {
         fprintf(json, "    \"meltdown\": %d\n", results.meltdown);
         fprintf(json, "  },\n");
         fprintf(json, "  \"summary\": {\n    \"pass\": %d,\n    \"warn\": %d,\n    \"vuln\": %d\n  }\n}\n", p, w, v);
-        fclose(json);
-        printf("    " GRN "●" RESET " JSON report generated: reports/report.json\n\n");
+        if (fclose(json) != 0) {
+            printf("    " YEL " Warning: JSON write may be incomplete\n");
+        } else {
+            printf("    " GRN "●" RESET " JSON report generated: reports/report.json\n\n");
+        }
     }
 }
