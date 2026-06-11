@@ -6,6 +6,7 @@ SRC=src/main.c src/memory_audit.c src/system_audit.c
 
 $(TARGET): $(SRC)
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(SRC)
+	@strip $(TARGET)
 	@echo "OK Build successful."
 
 clean:
