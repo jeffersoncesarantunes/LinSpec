@@ -1,90 +1,98 @@
-# ● Audit Reference
+# Audit Reference
 
-## ● Overview
+## Overview
 
-This document provides a technical reference for the kernel parameters and hardware security features audited by LinSpec. It serves as a guide for interpreting forensic results and understanding the underlying security mechanisms.
+This document is a technical reference for every kernel parameter and hardware security feature LinSpec checks. Use it to interpret forensic results and understand what each security mechanism actually does.
 
 ---
 
-## ● Memory Protection
+## Memory Protection
 
 ### ASLR (kernel.randomize_va_space)
+
 - **Path:** `/proc/sys/kernel/randomize_va_space`
 - **Expected Value:** `2` (Full Randomization)
-- **Forensic Evidence:** When enabled, the stack, virtual dynamic shared object (vDSO) page, and shared memory regions are randomized.
-- **Risk:** 
+- **Forensic Evidence:** When enabled, the stack, vDSO page, and shared memory regions all get randomized.
+- **Risk:**
   - **Disabled (0) or Partial (1):** Predictable memory layout.
-  - **Impact:** Significant increase in the success rate of exploitation techniques such as ROP (Return-Oriented Programming) and ret2libc.
+  - **Impact:** Makes ROP and ret2libc exploitation significantly easier.
 
 ---
 
-## ● Kernel Hardening
+## Kernel Hardening
 
 ### kptr_restrict
+
 - **Path:** `/proc/sys/kernel/kptr_restrict`
 - **Expected Value:** `2`
-- **Forensic Evidence:** Addresses in `/proc/kallsyms` will be displayed as zeros (`0000000000000000`) for unprivileged users.
+- **Forensic Evidence:** With this set, `/proc/kallsyms` shows kernel addresses as zeros (`0000000000000000`) for unprivileged users.
 - **Risk:**
-  - **Leakage:** Disclosure of kernel symbol addresses.
-  - **Impact:** Direct KASLR (Kernel Address Space Layout Randomization) bypass.
+  - **Leakage:** Kernel symbol addresses get exposed.
+  - **Impact:** Direct KASLR bypass — the attacker knows exactly where things live in memory.
 
 ### dmesg_restrict
+
 - **Path:** `/proc/sys/kernel/dmesg_restrict`
 - **Expected Value:** `1`
 - **Risk:**
-  - **Information Disclosure:** Privileged kernel logs exposed to unprivileged users, potentially leaking sensitive system information.
+  - **Information Disclosure:** Unprivileged users can read kernel logs, which may leak sensitive system info.
 
 ---
 
-## ● System Controls
+## System Controls
 
 ### ptrace_scope (Yama)
+
 - **Path:** `/proc/sys/kernel/yama/ptrace_scope`
 - **Expected Value:** `1` (Restricted Ptrace) or higher.
 - **Risk:**
-  - **Process Injection:** Ability for malicious processes to attach to and inject code into other running processes belonging to the same user.
+  - **Process Injection:** A malicious process can attach to and inject code into other running processes owned by the same user.
 
 ### unprivileged_userns_clone
+
 - **Path:** `/proc/sys/kernel/unprivileged_userns_clone`
 - **Expected Value:** `0` (Disabled)
 - **Risk:**
-  - **Sandbox Escape:** Unprivileged users creating new namespaces, often used as a vector for privilege escalation exploits.
+  - **Sandbox Escape:** Unprivileged users can create new namespaces, a common vector for privilege escalation.
 
 ---
 
-## ● Network Stack
+## Network Stack
 
 ### tcp_syncookies
+
 - **Path:** `/proc/sys/net/ipv4/tcp_syncookies`
 - **Expected Value:** `1`
 - **Risk:**
-  - **Denial of Service:** Vulnerability to SYN Flood attacks, which can exhaust system resources and disrupt network services.
+  - **Denial of Service:** Without SYN cookies, the system is vulnerable to SYN flood attacks that can exhaust resources and take down network services.
 
 ### bpf_jit_harden
+
 - **Path:** `/proc/sys/net/core/bpf_jit_harden`
 - **Expected Value:** `2`
 - **Risk:**
-  - **JIT Spraying:** Exploitation of the BPF Just-In-Time compiler to execute arbitrary code in the kernel context.
+  - **JIT Spraying:** Attackers can exploit the BPF JIT compiler to execute arbitrary code in the kernel.
 
 ---
 
-## ● CPU Mitigations
+## CPU Mitigations
 
 ### Hardware Vulnerabilities (Spectre, Meltdown, L1TF, etc.)
+
 - **Source:** `/sys/devices/system/cpu/vulnerabilities/`
 - **Forensic States:**
-  - **Mitigated:** The kernel has active software/hardware defenses.
+  - **Mitigated:** The kernel has active software or hardware defenses in place.
   - **Vulnerable:** The system is susceptible to side-channel attacks.
-  - **Not affected:** The CPU hardware is not susceptible to the specific vulnerability.
+  - **Not affected:** The CPU hardware itself isn't vulnerable to this specific issue.
 
 ---
 
-## ● Status Logic Summary
+## Status Logic Summary
 
-LinSpec evaluates data against a hardened security baseline to produce the following indicators:
+LinSpec compares each value against a hardened baseline and reports one of three states:
 
 | Status | Meaning | Forensic Significance |
 | :--- | :--- | :--- |
-| **PASS** | Secure configuration | Alignment with hardened baseline. |
-| **WARN** | Potential risk | Configuration deviates from strict hardening but may be necessary for compatibility. |
-| **VULN** | Exploitable condition | Critical gap identified; high priority for remediation. |
+| **PASS** | Secure configuration | Aligned with the hardened baseline |
+| **WARN** | Potential risk | Deviates from strict hardening but may be needed for compatibility |
+| **VULN** | Exploitable condition | Critical gap -- high priority for remediation |

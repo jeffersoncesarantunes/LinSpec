@@ -280,7 +280,7 @@ void export_reports(int p, int w, int v) {
         if (fclose(csv) != 0) {
             printf("\n    " YEL " Warning: CSV write may be incomplete\n");
         } else {
-            printf("\n    " GRN "●" RESET " CSV report generated: reports/report.csv\n");
+            printf("\n    " GRN "o" RESET " CSV report generated: reports/report.csv\n");
         }
     }
     FILE *json = fopen("reports/report.json", "w");
@@ -301,7 +301,7 @@ void export_reports(int p, int w, int v) {
         if (fclose(json) != 0) {
             printf("    " YEL " Warning: JSON write may be incomplete\n");
         } else {
-            printf("    " GRN "●" RESET " JSON report generated: reports/report.json\n\n");
+            printf("    " GRN "o" RESET " JSON report generated: reports/report.json\n\n");
         }
     }
 }

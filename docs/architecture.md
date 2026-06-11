@@ -1,64 +1,65 @@
-# ● Architecture
+# Architecture
 
-## ● Overview
+## Overview
 
-LinSpec is a modular, high-performance C-based auditing tool designed for real-time kernel hardening verification and forensic triage. It serves as the intelligence layer for the forensic ecosystem.
+LinSpec is a modular C-based auditing tool built for real-time kernel hardening checks and forensic triage. It's the intelligence layer in the forensic ecosystem — lightweight, focused, and dependency-free.
 
 ---
 
-## ● Components
+## Components
 
 ### main.c
-- **Entry Point**: Handles command-line arguments and initialization.
-- **Orchestration**: Manages the sequence of audit modules and final report generation.
+
+The entry point. It handles command-line arguments, sets things up, then orchestrates the audit modules and report generation.
 
 ### memory_audit.c
-- **Integrity Checks**: Validates `ASLR`, `NX` stack, and `KASLR` state.
-- **Pointer Security**: Inspects kernel pointer visibility (`kptr_restrict`).
+
+Handles integrity checks for ASLR, NX stack, and KASLR state. Also inspects kernel pointer visibility through `kptr_restrict`.
 
 ### system_audit.c
-- **Kernel Constraints**: Audits `sysctl` parameters, sandboxing flags, and `kexec` status.
-- **Hardware Mitigations**: Verifies CPU-level defenses against side-channel attacks (Spectre/Meltdown).
+
+Audits sysctl parameters, sandboxing flags, and kexec status. On the hardware side, it checks CPU-level defenses against Spectre and Meltdown.
 
 ### checks.h
-- **Baseline Definitions**: Contains the security thresholds and logic used to determine PASS, WARN, or VULN status.
+
+Contains the security thresholds and evaluation logic. This is where PASS, WARN, and VULN boundaries are defined.
 
 ---
 
-## ● Data Sources
+## Data Sources
 
-LinSpec follows a **Passive Inspection** model, interfacing directly with:
+LinSpec uses a passive inspection model — it only reads, never writes. It pulls data from:
 
-- `/proc/sys` → Runtime kernel configuration and security parameters.
-- `/sys/devices/system/cpu/vulnerabilities` → Hardware-level mitigation status.
-- `/proc/kallsyms` → Runtime validation of address space randomization.
-
----
-
-## ● Execution Flow
-
-1. **Initialization**: Setup of environment and forensic baseline parameters.
-2. **Data Collection**: Sequential reading of kernel and hardware interfaces.
-3. **Logic Evaluation**: Comparison of live state against the defined security standard.
-4. **Report Generation**: Output to terminal UI and export of the **Audit Contract** (JSON/CSV).
+- `/proc/sys` — kernel runtime configuration and security parameters
+- `/sys/devices/system/cpu/vulnerabilities` — hardware mitigation status
+- `/proc/kallsyms` — address space layout for ASLR/KASLR validation
 
 ---
 
-## ● The Audit Contract (Integration Layer)
+## Execution Flow
 
-The primary architectural output of LinSpec is the `report.json` file. This file acts as a technical contract for the ecosystem:
-
-- **S.I.R.E.N Integration**: The acquisition engine parses this JSON to detect Kernel Lockdown or restricted pointers, automatically adjusting its extraction method (/dev/mem vs /proc/kcore).
-- **K-Scanner Integration**: Provides the analysis layer with the ASLR/KASLR state, enabling precise memory offset calculations during pattern matching.
-
----
-
-## ● Design Principles
-
-- **Zero Dependencies**: Pure C99, requiring only standard libraries (`libc`).
-- **Forensic Safety**: Strictly read-only operations; no system state is modified.
-- **Operational Integrity**: Stateless execution to ensure the audit does not leave a footprint on the kernel's configuration.
+1. **Initialization** — set up the environment and baseline parameters
+2. **Data Collection** — read kernel and hardware interfaces sequentially
+3. **Logic Evaluation** — compare live state against the defined security standard
+4. **Report Generation** — output to the terminal UI and export the Audit Contract (JSON/CSV)
 
 ---
 
-*LinSpec is designed to be the foundational intelligence provider for automated forensic pipelines.*
+## The Audit Contract (Integration Layer)
+
+The main architectural output is `report.json`. It acts as a contract between tools in the ecosystem:
+
+- **S.I.R.E.N Integration:** The acquisition engine parses the JSON to detect Kernel Lockdown or restricted pointers, then picks the right extraction method (``/dev/mem`` vs ``/proc/kcore``).
+- **K-Scanner Integration:** The analysis layer gets ASLR/KASLR state from the report, which helps calculate accurate memory offsets during pattern matching.
+
+---
+
+## Design Principles
+
+- **Zero Dependencies:** Pure C99 with standard libc only
+- **Forensic Safety:** Strictly read-only — no system state gets modified
+- **Operational Integrity:** Stateless execution means the audit leaves no footprint on kernel configuration
+
+---
+
+*LinSpec provides the foundational intelligence for automated forensic pipelines.*

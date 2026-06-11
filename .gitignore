@@ -1,20 +1,14 @@
-# Binary
 linspec
-
-# Object files
 *.o
-
-# Build
 *.out
-
-# Reports
 report.json
 report.csv
 reports/
-
-# Editor
 *~
 *.swp
-
-# OS
 .DS_Store
+.vscode/
+.idea/
+build/
+core
+*.core

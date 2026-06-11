@@ -1,4 +1,4 @@
-# 🐧 LinSpec
+# LinSpec
 
 Lightweight kernel hardening audit tool for Linux forensic triage and security baseline verification.
 
@@ -11,43 +11,41 @@ Lightweight kernel hardening audit tool for Linux forensic triage and security b
 
 ---
 
-## ● Etymology & Origin
+## Etymology and Origin
 
-**LinSpec** derives from **Linux** + **Inspection (Specification)**.
+The name **LinSpec** comes from **Linux** + **Inspection (Specification)**.
 
-The tool was conceptualized as a **forensic entry-point**, evaluating whether kernel-level protections are correctly enforced before deeper analysis begins.
+It was designed as a forensic entry-point — a tool that checks whether kernel-level protections are actually enforced before you move on to deeper analysis.
 
 ---
 
-## ● Overview
+## Overview
 
-LinSpec is a specialized forensic utility designed to audit the security posture of the Linux Kernel in real-time.
-
-It evaluates critical kernel parameters, hardware mitigations, and system-level protection flags to generate a structured security baseline report. It operates as the **forensic triage phase**, identifying weaknesses before deeper memory analysis.
+LinSpec audits the Linux kernel's security posture in real time. It pulls critical kernel parameters, hardware mitigation states, and system-level protection flags, then produces a structured security baseline report. Consider it the forensic triage step: surface the weaknesses before diving into memory analysis.
 
 **Core Audit Areas:**
 
-* **Memory Protection:** `ASLR`, `NX`, and `DMA` restrictions
-* **Kernel Hardening:** Pointer restrictions, `kexec` disabled, and `dmesg` visibility
-* **CPU Mitigations:** Spectre and Meltdown status
-* **Network Stack:** BPF JIT hardening and SYN Flood protection
+- **Memory Protection:** ASLR, NX, and DMA restrictions
+- **Kernel Hardening:** Pointer restrictions, kexec disabled, dmesg visibility
+- **CPU Mitigations:** Spectre and Meltdown status
+- **Network Stack:** BPF JIT hardening and SYN Flood protection
 
 ---
 
-## ● Features
+## Features
 
-* Real-time kernel auditing
-* CPU vulnerability detection
-* **Forensic Data Export (JSON/CSV)**
-* Minimalist terminal UI
-* Pure C99 (no dependencies)
-* PASS / WARN / VULN classification
-* Passive inspection (read-only)
-* Stateless execution
+- Real-time kernel auditing
+- CPU vulnerability detection
+- Forensic Data Export (JSON/CSV)
+- Minimalist terminal UI
+- Pure C99 (no dependencies)
+- PASS / WARN / VULN classification
+- Passive inspection (read-only)
+- Stateless execution
 
 ---
 
-## ● Example Output
+## Example Output
 
 ```text
 [ 01 ]  MEMORY   >  Address Space Layout Randomization     [+] [   PASS   ]
@@ -61,24 +59,24 @@ It evaluates critical kernel parameters, hardware mitigations, and system-level 
 
 ---
 
-## ● How It Works
+## How It Works
 
-LinSpec interfaces directly with:
+LinSpec reads directly from these kernel interfaces:
 
-* `/proc/sys`
-* `/sys/devices`
+- `/proc/sys`
+- `/sys/devices`
 
-Audit flow:
+The audit flow is simple:
 
 1. Collect kernel security parameters
-2. Normalize and classify values
+2. Normalize and classify the values
 3. Compare against a hardened baseline
 4. Assign PASS / WARN / VULN states
 5. Export structured forensic reports
 
 ---
 
-## ● Build and Run
+## Build and Run
 
 ```bash
 # 1. Clone the repository
@@ -96,26 +94,26 @@ sudo ./linspec
 
 ---
 
-## ● Reports & Integration
+## Reports and Integration
 
-After execution, LinSpec generates structured artifacts for external analysis:
+After execution, LinSpec writes out structured artifacts for further analysis:
 
-* `report.json`: Machine-readable data for forensic pipelines
-* `report.csv`: Tabular format for analysis and documentation
+- `report.json`: Machine-readable data for forensic pipelines
+- `report.csv`: Tabular format for analysis and documentation
 
-### ● Ecosystem Integration (S.I.R.E.N)
+### Ecosystem Integration (S.I.R.E.N)
 
-The generated `report.json` acts as a telemetry layer for the ecosystem:
+The `report.json` feeds into the larger ecosystem:
 
-* **Role:** Input source for **S.I.R.E.N**
-* **Capability:** Enables adaptive memory acquisition
-* **Benefit:** Automates forensic capture decisions
+- **Role:** Input source for S.I.R.E.N
+- **Capability:** Enables adaptive memory acquisition
+- **Benefit:** Automates forensic capture decisions
 
 ---
 
-## ● The Forensic Ecosystem
+## The Forensic Ecosystem
 
-LinSpec is the first component of a three-stage forensic workflow:
+LinSpec is the first stage in a three-stage forensic workflow:
 
 [![Tool-LinSpec](https://img.shields.io/badge/Stage%201-LinSpec%20\(Audit\)-002B36?style=flat-square\&logo=linux\&logoColor=white)](#-linspec)
 [![Tool-SIREN](https://img.shields.io/badge/Stage%202-S.I.R.E.N%20\(Acquisition\)-006400?style=flat-square\&logo=linux\&logoColor=white)](https://github.com/jeffersoncesarantunes/S.I.R.E.N)
@@ -123,18 +121,18 @@ LinSpec is the first component of a three-stage forensic workflow:
 
 ---
 
-## ● Technical Validation & Evidence
+## Technical Validation and Evidence
 
-To confirm audit accuracy:
+You can verify the audit output yourself:
 
-**1. Verifying Structured Reports:**
+**1. Check the structured reports:**
 
 ```bash
 column -s, -t < report.csv
 cat report.json | grep -A 4 "summary"
 ```
 
-**2. Verifying Kernel Constraints:**
+**2. Cross-check against the live kernel:**
 
 ```bash
 cat /proc/kallsyms | head -n 10
@@ -145,20 +143,20 @@ cat /proc/cmdline
 
 ---
 
-## ● Project in Action
+## Project in Action
 
 ![System Audit Overview](./Images/linspec1.png)
-*1 - System Audit Overview. Execution of the forensic engine performing baseline triage.*
+*System Audit Overview -- the forensic engine running a baseline triage.*
 
-![Data Integrity & Reporting](./Images/linspec2.png)
-*2 - Data Integrity & Reporting. Validation between terminal output and structured reports.*
+![Data Integrity and Reporting](./Images/linspec2.png)
+*Data Integrity and Reporting -- terminal output matched against structured reports.*
 
 ![Forensic Kernel Validation](./Images/linspec3.png)
-*3 - Forensic Kernel Validation. Cross-checking LinSpec results with live kernel state.*
+*Forensic Kernel Validation -- LinSpec results cross-checked with the live kernel state.*
 
 ---
 
-## ● Repository Structure
+## Repository Structure
 
 ```text
 ├── docs/
@@ -185,28 +183,28 @@ cat /proc/cmdline
 
 ---
 
-## ● Tech Stack
+## Tech Stack
 
-* **Language:** C (C99)
-* **Data Sources:** `/proc` and `/sys`
-* **Build Tool:** GNU Make
-* **Target Platforms:** Linux Kernel 4.x, 5.x, 6.x
-
----
-
-## ● Roadmap
-
-* [x] High-performance C99 Core Engine
-* [x] Side-channel Vulnerability Detection (Spectre/Meltdown)
-* [x] Brutalist-inspired Terminal UI
-* [x] Structured Output (JSON/CSV Export)
-* [x] **Ecosystem Integration (Pre-acquisition Audit for S.I.R.E.N)**
-* [ ] Automated Remediation (System Hardening)
-* [ ] K-Scanner Deep Integration
+- **Language:** C (C99)
+- **Data Sources:** `/proc` and `/sys`
+- **Build Tool:** GNU Make
+- **Target Platforms:** Linux Kernel 4.x, 5.x, 6.x
 
 ---
 
-## ● Documentation
+## Roadmap
+
+- [x] High-performance C99 Core Engine
+- [x] Side-channel Vulnerability Detection (Spectre/Meltdown)
+- [x] Brutalist-inspired Terminal UI
+- [x] Structured Output (JSON/CSV Export)
+- [x] Ecosystem Integration (Pre-acquisition Audit for S.I.R.E.N)
+- [ ] Automated Remediation (System Hardening)
+- [ ] K-Scanner Deep Integration
+
+---
+
+## Documentation
 
 [![Docs-Architecture](https://img.shields.io/badge/Architecture--Design-002B36?style=flat-square\&logo=linux\&logoColor=white)](./docs/architecture.md)
 [![Docs-Methodology](https://img.shields.io/badge/Forensic--Methodology-006400?style=flat-square\&logo=fortinet\&logoColor=white)](./docs/forensic_methodology.md)
@@ -215,7 +213,7 @@ cat /proc/cmdline
 
 ---
 
-## ● License
+## License
 
 [![License-MIT](https://img.shields.io/badge/License-MIT-BD93F9?style=flat-square\&logo=opensourceinitiative\&logoColor=white)](./LICENSE)
 
