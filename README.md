@@ -168,7 +168,6 @@ cat /proc/cmdline
 │   ├── linspec1.png
 │   ├── linspec2.png
 │   └── linspec3.png
-├── include/
 ├── src/
 │   ├── checks.h
 │   ├── main.c
