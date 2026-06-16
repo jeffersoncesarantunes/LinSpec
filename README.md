@@ -160,21 +160,21 @@ cat /proc/cmdline
 
 ```text
 ├── docs/
-│   ├── architecture.md
-│   ├── audit_reference.md
-│   ├── forensic_methodology.md
-│   └── threat_model.md
+│   ├── architecture.md         System architecture and design
+│   ├── audit_reference.md      Audit check reference
+│   ├── forensic_methodology.md  Forensic analysis methodology
+│   └── threat_model.md         Security threat model
 ├── Images/
-│   ├── linspec1.png
-│   ├── linspec2.png
-│   └── linspec3.png
+│   ├── linspec1.png            Main interface
+│   ├── linspec2.png            Audit results
+│   └── linspec3.png            Report view
 ├── src/
-│   ├── checks.h
-│   ├── main.c
-│   ├── memory_audit.c
-│   └── system_audit.c
-├── report.csv
-├── report.json
+│   ├── checks.h                Audit check declarations
+│   ├── main.c                  CLI entry point
+│   ├── memory_audit.c          Memory security audit
+│   └── system_audit.c          System configuration audit
+├── report.csv                  CSV audit output
+├── report.json                 JSON audit output
 ├── LICENSE
 ├── Makefile
 └── README.md
