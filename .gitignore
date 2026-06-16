@@ -12,3 +12,22 @@ reports/
 build/
 core
 *.core
+*.log
+
+# Secrets / credentials
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.yml
+.netrc
+id_*
+known_hosts
+.ssh/
+.gnupg/
+
+# Cloud / infra
+.terraform/
+.kube/
+.aws/
