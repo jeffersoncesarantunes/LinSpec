@@ -31,3 +31,17 @@ known_hosts
 .terraform/
 .kube/
 .aws/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor temp files
+*.bak
+*.backup
+
+# Python artifacts (tools/)
+__pycache__/
+*.pyc
+*.pyo
