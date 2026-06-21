@@ -180,34 +180,34 @@ cat /proc/cmdline
 ## Repository Structure
 
 ```text
-├── docs/
-│   ├── architecture.md                    System architecture and design
-│   ├── audit_reference.md                 Audit check reference
-│   ├── forensic_methodology.md            Forensic analysis methodology
-│   └── threat_model.md                    Security threat model
++-- docs/
+|   +-- architecture.md                    System architecture and design
+|   +-- audit_reference.md                 Audit check reference
+|   +-- forensic_methodology.md            Forensic analysis methodology
+|   \-- threat_model.md                    Security threat model
 
-├── Images/
-│   ├── linspec1.png                       Main interface screenshot
-│   ├── linspec2.png                       Audit results screenshot
-│   └── linspec3.png                       Report view screenshot
++-- Images/
+|   +-- linspec1.png                       Main interface screenshot
+|   +-- linspec2.png                       Audit results screenshot
+|   \-- linspec3.png                       Report view screenshot
 
-├── reports/                               Audit output reports
++-- reports/                               Audit output reports
 
-├── scripts/                               Build and utility scripts
++-- scripts/                               Build and utility scripts
 
-├── src/
-│   ├── checks.h                           Audit check declarations
-│   ├── main.c                             CLI entry point
-│   ├── memory_audit.c                     Memory security audit
-│   └── system_audit.c                     System configuration audit
++-- src/
+|   +-- checks.h                           Audit check declarations
+|   +-- main.c                             CLI entry point
+|   +-- memory_audit.c                     Memory security audit
+|   \-- system_audit.c                     System configuration audit
 
-├── .gitignore
++-- .gitignore
 
-├── LICENSE
++-- LICENSE
 
-├── Makefile
++-- Makefile
 
-└── README.md
+\-- README.md
 ```
 
 
