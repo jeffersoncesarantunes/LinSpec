@@ -187,9 +187,13 @@ cat /proc/cmdline
 │   └── threat_model.md                    Security threat model
 
 ├── Images/
-│   ├── linspec1.png                       Main interface
-│   ├── linspec2.png                       Audit results
-│   └── linspec3.png                       Report view
+│   ├── linspec1.png                       Main interface screenshot
+│   ├── linspec2.png                       Audit results screenshot
+│   └── linspec3.png                       Report view screenshot
+
+├── reports/                               Audit output reports
+
+├── scripts/                               Build and utility scripts
 
 ├── src/
 │   ├── checks.h                           Audit check declarations
@@ -197,9 +201,7 @@ cat /proc/cmdline
 │   ├── memory_audit.c                     Memory security audit
 │   └── system_audit.c                     System configuration audit
 
-├── report.csv                             CSV audit output
-
-├── report.json                            JSON audit output
+├── .gitignore
 
 ├── LICENSE
 
