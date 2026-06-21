@@ -180,34 +180,34 @@ cat /proc/cmdline
 ## Repository Structure
 
 ```text
-+-- docs/
-|   +-- architecture.md                    System architecture and design
-|   +-- audit_reference.md                 Audit check reference
-|   +-- forensic_methodology.md            Forensic analysis methodology
-|   \-- threat_model.md                    Security threat model
+├── docs/
+│   ├── architecture.md
+│   ├── audit_reference.md
+│   ├── forensic_methodology.md
+│   └── threat_model.md
 
-+-- Images/
-|   +-- linspec1.png                       Main interface screenshot
-|   +-- linspec2.png                       Audit results screenshot
-|   \-- linspec3.png                       Report view screenshot
+├── Images/
+│   ├── linspec1.png
+│   ├── linspec2.png
+│   └── linspec3.png
 
-+-- reports/                               Audit output reports
+├── reports/
 
-+-- scripts/                               Build and utility scripts
+├── scripts/
 
-+-- src/
-|   +-- checks.h                           Audit check declarations
-|   +-- main.c                             CLI entry point
-|   +-- memory_audit.c                     Memory security audit
-|   \-- system_audit.c                     System configuration audit
+├── src/
+│   ├── checks.h
+│   ├── main.c
+│   ├── memory_audit.c
+│   └── system_audit.c
 
-+-- .gitignore
+├── .gitignore
 
-+-- LICENSE
+├── LICENSE
 
-+-- Makefile
+├── Makefile
 
-\-- README.md
+└── README.md
 ```
 
 
