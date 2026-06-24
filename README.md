@@ -50,6 +50,14 @@ LinSpec audits the Linux kernel's security posture in real time. It reads from `
 
 ---
 
+## Screenshots
+
+![LinSpec Screenshot 1](Images/linspec1.png)
+![LinSpec Screenshot 2](Images/linspec2.png)
+![LinSpec Screenshot 3](Images/linspec3.png)
+
+---
+
 ## Quick Start
 
 ```bash
