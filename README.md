@@ -188,7 +188,7 @@ make install      # install to /usr/local/bin
 
 ## Security
 
-See [SECURITY.md](SECURITY.md) for the security policy and known limitations.
+[![Docs-Security](https://img.shields.io/badge/Security-Policy-CC0000?style=flat-square&logo=opensourceinitiative&logoColor=white)](SECURITY.md)
 
 ---
 
