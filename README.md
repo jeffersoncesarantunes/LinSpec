@@ -194,13 +194,15 @@ See [SECURITY.md](SECURITY.md) for the security policy and known limitations.
 
 ## Documentation
 
-- [Architecture](docs/architecture.md)
-- [Audit Reference](docs/audit_reference.md)
-- [Forensic Methodology](docs/forensic_methodology.md)
-- [Threat Model](docs/threat_model.md)
+[![Docs-Architecture](https://img.shields.io/badge/Architecture-Design-00599C?style=flat-square&logo=linux&logoColor=white)](docs/architecture.md)
+[![Docs-Audit](https://img.shields.io/badge/Audit-Reference-8A2BE2?style=flat-square)](docs/audit_reference.md)
+[![Docs-Methodology](https://img.shields.io/badge/Forensic-Methodology-444444?style=flat-square&logo=gnu-bash&logoColor=white)](docs/forensic_methodology.md)
+[![Docs-ThreatModel](https://img.shields.io/badge/Threat-Model-CC0000?style=flat-square&logo=opensourceinitiative&logoColor=white)](docs/threat_model.md)
 
 ---
 
 ## License
 
-MIT License — see [LICENSE](LICENSE).
+[![License-MIT](https://img.shields.io/badge/License-MIT-EE0000?style=flat-square&logo=opensourceinitiative&logoColor=white)](LICENSE)
+
+*This project is licensed under the MIT License.*
