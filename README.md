@@ -2,10 +2,11 @@
 
 Lightweight kernel hardening audit tool for Linux forensic triage and security baseline verification.
 
-[![Platform-Linux](https://img.shields.io/badge/Platform-Linux-1793D1?style=flat-square\&logo=linux\&logoColor=white)](https://kernel.org)
-[![Language-C99](https://img.shields.io/badge/Language-C99-A8B9CC?style=flat-square\&logo=c\&logoColor=white)](https://gcc.gnu.org/)
-[![License-MIT](https://img.shields.io/badge/License-MIT-EE0000?style=flat-square\&logo=license\&logoColor=white)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Active-006400?style=flat-square)](#-roadmap)
+[![Platform-Linux](https://img.shields.io/badge/Platform-Linux-1793D1?style=flat-square&logo=linux&logoColor=white)](https://kernel.org)
+[![Language-C99](https://img.shields.io/badge/Language-C99-A8B9CC?style=flat-square&logo=c&logoColor=white)](https://gcc.gnu.org/)
+[![License-MIT](https://img.shields.io/badge/License-MIT-EE0000?style=flat-square&logo=license&logoColor=white)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-00FF41?style=flat-square)](#-roadmap)
+[![Tested-on](https://img.shields.io/badge/Tested%20on-Arch%20Linux-1793D1?style=flat-square&logo=arch-linux)](https://security.archlinux.org/)
 [![Domain](https://img.shields.io/badge/Domain-Digital%20Forensics-8A2BE2?style=flat-square)](./docs/forensic_methodology.md)
 
 ---
@@ -157,7 +158,6 @@ Phase 3: K-Scanner (Analyze)  --> RWX detection + YARA
 
 ## Roadmap
 
-### Completed
 - [x] High-performance C99 Core Engine
 - [x] 29 Security Checks Across 7 Categories
 - [x] Side-channel Vulnerability Detection (Spectre/Meltdown/L1TF/MDS)
@@ -170,17 +170,6 @@ Phase 3: K-Scanner (Analyze)  --> RWX detection + YARA
 - [x] CI/CD (CodeQL + Gitleaks)
 - [x] Docker Container Image
 - [x] Test Suite (Shell-based)
-
-### Future
-- [ ] Kernel Lockdown Mode Detection
-- [ ] IMA/EVM Integrity Measurement Audit
-- [ ] SELinux / AppArmor Status Checks
-- [ ] Container Runtime Detection (Docker/Kata/gVisor)
-- [ ] Performance Profiling Mode
-- [ ] Syscall Filter Audit (seccomp)
-- [ ] Encrypted RAM / TPM Attestation Checks
-- [ ] Real-time CVE Database Lookup
-- [ ] Web Dashboard (read-only metrics server)
 
 ---
 
