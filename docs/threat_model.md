@@ -2,60 +2,65 @@
 
 ## Objective
 
-This document lays out the attacker capabilities and attack vectors that LinSpec evaluates. By mapping defensive configurations to known exploitation techniques, LinSpec shows you how resilient a system actually is against both local and remote threats.
+Map attacker capabilities and attack vectors to LinSpec's defensive checks. Shows how resilient a system is against local and remote threats.
 
 ---
 
 ## Assumed Attacker Capabilities
 
-- **Local Access:** Unprivileged shell access on the box.
-- **Code Execution:** Can compile and run arbitrary binaries or scripts (Python, C, etc.).
-- **Exploitation Knowledge:** Familiar with modern kernel exploitation — ROP chains, heap spraying, side-channel analysis.
+- **Local Access:** Unprivileged shell access
+- **Code Execution:** Can compile and run arbitrary binaries
+- **Exploitation Knowledge:** Familiar with modern kernel exploitation techniques
 
 ---
 
 ## Evaluated Attack Vectors
 
 ### 1. Information Disclosure (Reconnaissance)
+- **Vector:** Kernel symbol addresses via /proc/kallsyms, dmesg, perf events
+- **Goal:** Bypass KASLR by determining kernel base address
+- **LinSpec Defense:** kptr_restrict, dmesg_restrict, perf_event_paranoid
 
-- **Vector:** Kernel symbol addresses leak through `/proc/kallsyms` or sensitive data in `dmesg`.
-- **Attacker Goal:** Bypass KASLR by figuring out the kernel's base address in memory.
-- **LinSpec Defense:** Audits `kptr_restrict` and `dmesg_restrict`.
-
-### 2. Privilege Escalation and Persistence
-
-- **Vector:** Abuse ptrace to inject code into high-privilege processes, or use unprivileged user namespaces to break out of containers and sandboxes.
-- **Attacker Goal:** Root access or a persistent backdoor.
-- **LinSpec Defense:** Audits `ptrace_scope` and `unprivileged_userns_clone`.
+### 2. Privilege Escalation
+- **Vector:** Ptrace injection, user namespaces, BPF exploitation
+- **Goal:** Root access
+- **LinSpec Defense:** ptrace_scope, userns_clone, unpriv_bpf, ftrace_enabled
 
 ### 3. Kernel Space Exploitation
+- **Vector:** JIT spraying via BPF, kexec module loading, mmap low address
+- **Goal:** Ring 0 code execution
+- **LinSpec Defense:** bpf_jit_harden, kexec_disabled, mmap_min_addr
 
-- **Vector:** Exploit the BPF JIT compiler through JIT spraying, or load malicious modules via `kexec`.
-- **Attacker Goal:** Execute arbitrary code in Ring 0 — the kernel context.
-- **LinSpec Defense:** Audits `bpf_jit_harden` and `kexec_load_disabled`.
+### 4. Side-Channel Attacks
+- **Vector:** CPU pipeline flaws (Spectre, Meltdown, L1TF, MDS)
+- **Goal:** Cross-boundary data leakage (keys, passwords)
+- **LinSpec Defense:** CPU vulnerability interface checks
 
-### 4. Side-Channel and Microarchitectural Attacks
+### 5. Network-Based Attacks
+- **Vector:** SYN flood, IP spoofing, ARP poisoning, TCP injection
+- **Goal:** DoS, man-in-the-middle, network reconnaissance
+- **LinSpec Defense:** tcp_syncookies, rp_filter, arp_ignore/announce, tcp_rfc1337
 
-- **Vector:** Exploit hardware flaws in the CPU pipeline (Spectre, Meltdown).
-- **Attacker Goal:** Read sensitive data across security boundaries — passwords, keys, etc.
-- **LinSpec Defense:** Audits CPU vulnerability mitigation status.
+### 6. Arbitrary Code Execution via Core Dumps
+- **Vector:** Core dump piped to attacker-controlled handler
+- **Goal:** Privilege escalation via crafted core dump
+- **LinSpec Defense:** core_pattern analysis
 
 ---
 
 ## Defensive Mapping Matrix
 
-| Attack Type | Criticality | LinSpec Audit Focus | Mitigation Goal |
-| :--- | :--- | :--- | :--- |
-| **Info Leak** | Medium | `kptr_restrict`, `dmesg_restrict` | Entropy preservation (KASLR) |
-| **Code Injection** | High | `ptrace_scope`, `nx_stack` | Prevent process hijacking |
-| **Denial of Service** | Low | `tcp_syncookies` | Resource availability during SYN floods |
-| **Kernel Exploit** | Critical | `bpf_jit_harden`, `kexec_disabled` | Kernel runtime integrity |
-| **Side-channel** | High | CPU vulnerability interfaces | Hardware-level isolation |
+| Attack Type | Criticality | Checks | Mitigation |
+|-------------|-------------|--------|------------|
+| Info Leak | Medium | kptr_restrict, dmesg_restrict, perf_event_paranoid | KASLR preservation |
+| Code Injection | High | ptrace_scope, userns_clone, unpriv_bpf | Prevent process hijacking |
+| DoS | Low | tcp_syncookies, icmp_ignore_bogus | Resource availability |
+| Kernel Exploit | Critical | bpf_jit_harden, kexec_disabled, mmap_min_addr | Kernel runtime integrity |
+| Side-channel | High | CPU vulnerability checks | Hardware-level isolation |
+| Network Pivot | Medium | ip_forward, rp_filter, arp_* | Network segmentation |
 
 ---
 
 ## Key Insight
 
-LinSpec evaluates attack feasibility.
-
-A system with multiple VULN ratings isn't necessarily compromised. What it means is that the cost of attack is significantly lower. In a forensic context, these findings hint at which paths an intruder probably took to gain control.
+LinSpec evaluates attack feasibility. Multiple VULN ratings indicate significantly lower attack cost. In a forensic context, these findings reveal the probable attack path.

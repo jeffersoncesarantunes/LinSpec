@@ -1,20 +1,16 @@
 linspec
 *.o
 *.out
-report.json
-report.csv
 reports/
+build/
 *~
 *.swp
 .DS_Store
 .vscode/
 .idea/
-build/
 core
 *.core
 *.log
-
-# Secrets / credentials
 .env
 .env.*
 *.pem
@@ -26,22 +22,13 @@ id_*
 known_hosts
 .ssh/
 .gnupg/
-
-# Cloud / infra
 .terraform/
 .kube/
 .aws/
-
-# OS metadata
-.DS_Store
 Thumbs.db
 Desktop.ini
-
-# Editor temp files
 *.bak
 *.backup
-
-# Python artifacts (tools/)
 __pycache__/
 *.pyc
 *.pyo

@@ -1,0 +1,31 @@
+{
+  "name": "LinSpec Default",
+  "description": "Default hardened baseline for Linux kernel security auditing",
+  "version": "2.0.0",
+  "checks": {
+    "aslr": { "expected": 2, "op": "eq" },
+    "kptr_restrict": { "expected": 2, "op": "ge" },
+    "ptrace_scope": { "expected": 1, "op": "ge" },
+    "dmesg_restrict": { "expected": 1, "op": "eq" },
+    "bpf_jit_harden": { "expected": 2, "op": "eq" },
+    "tcp_syncookies": { "expected": 1, "op": "eq" },
+    "userns_clone": { "expected": 0, "op": "eq" },
+    "ip_forward": { "expected": 0, "op": "eq" },
+    "protected_symlinks": { "expected": 1, "op": "eq" },
+    "protected_hardlinks": { "expected": 1, "op": "eq" },
+    "kexec_disabled": { "expected": 1, "op": "eq" },
+    "perf_event_paranoid": { "expected": 2, "op": "ge" },
+    "rp_filter_all": { "expected": 1, "op": "eq" },
+    "rp_filter_default": { "expected": 1, "op": "eq" },
+    "tcp_rfc1337": { "expected": 1, "op": "eq" },
+    "icmp_ignore_bogus": { "expected": 1, "op": "eq" },
+    "arp_ignore": { "expected": 1, "op": "ge" },
+    "arp_announce": { "expected": 2, "op": "ge" },
+    "unpriv_bpf": { "expected": 1, "op": "eq" },
+    "ftrace_enabled": { "expected": 0, "op": "eq" },
+    "core_uses_pid": { "expected": 1, "op": "eq" },
+    "sysrq": { "expected": 0, "op": "eq" },
+    "mmap_min_addr": { "expected": 65536, "op": "ge" },
+    "entropy_avail": { "expected": 200, "op": "ge" }
+  }
+}
