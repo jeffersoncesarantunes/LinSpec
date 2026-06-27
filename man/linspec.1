@@ -1,0 +1,54 @@
+.TH LINSPEC 1 "2026-06-27" "LinSpec" "User Commands"
+.SH NAME
+linspec \- Linux kernel hardening audit tool
+.SH SYNOPSIS
+.B linspec
+[\fI--json\fR | \fI--csv\fR | \fI--html\fR]
+[\fI--apply\fR]
+[\fI--profile\fR \fIname\fR]
+[\fI--watch\fR]
+[\fI--help\fR]
+.SH DESCRIPTION
+LinSpec performs 29 kernel hardening checks across 7 categories:
+memory protection, kernel configuration, network hardening,
+filesystem security, CPU mitigations, cryptographic settings,
+and execution restrictions. It reads /proc/sys and /sys
+interfaces and compares values against known secure baselines.
+.SH OPTIONS
+.TP
+.B \--json
+Export results in JSON format.
+.TP
+.B \--csv
+Export results in CSV format.
+.TP
+.B \--html
+Export results in HTML report.
+.TP
+.B \--apply
+Apply recommended sysctl remediations (requires root).
+.TP
+.B \--profile \fIname\fR
+Load a named hardening profile from profiles/ directory.
+.TP
+.B \--watch
+Monitor sysctl values continuously for changes.
+.TP
+.B \--help
+Display this help message and exit.
+.SH FILES
+.TP
+.I profiles/
+Directory containing named hardening profiles.
+.TP
+.I reports/
+Output directory for audit reports.
+.SH EXIT STATUS
+.B 0
+on success, 1 on error.
+.SH AUTHOR
+Jefferson Cesar Antunes
+.SH SEE ALSO
+.BR kscanner (1),
+.BR kverify (1),
+.BR syscage (1)

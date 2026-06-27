@@ -34,16 +34,25 @@ test: $(TARGET) test_runner
 test_runner:
 	@mkdir -p profiles reports
 
-install: $(TARGET)
+MANDIR ?= $(DESTDIR)/usr/local/share/man/man1
+
+install: $(TARGET) install-man
 	@install -m 0755 -d $(DESTDIR)/usr/local/bin
 	@install -m 0755 $(TARGET) $(DESTDIR)/usr/local/bin/$(TARGET)
 	@install -m 0755 -d $(DESTDIR)/usr/local/share/linspec/profiles
 	@cp -r profiles/* $(DESTDIR)/usr/local/share/linspec/profiles/ 2>/dev/null || true
 	@echo "OK Installed to $(DESTDIR)/usr/local/bin/$(TARGET)"
 
+install-man:
+	@install -m 0755 -d $(MANDIR)
+	@install -m 644 man/linspec.1 $(MANDIR)/linspec.1
+	@echo "  Installed man page to $(MANDIR)"
+
 uninstall:
 	@rm -f $(DESTDIR)/usr/local/bin/$(TARGET)
 	@rm -rf $(DESTDIR)/usr/local/share/linspec
+	@rm -f $(MANDIR)/linspec.1
+	@-rmdir $(MANDIR) 2>/dev/null; true
 	@echo "OK Uninstalled."
 
 lint:
