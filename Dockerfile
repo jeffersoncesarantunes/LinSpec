@@ -1,7 +1,7 @@
 FROM alpine:3.24 AS builder
 RUN apk add --no-cache gcc musl-dev make
 WORKDIR /src
-COPY Makefile src/ ./
+COPY . ./
 RUN make
 
 FROM scratch
