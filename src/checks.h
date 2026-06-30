@@ -95,5 +95,6 @@ int export_csv(const check_result_t *results, int count, const char *outdir);
 int export_html(const check_result_t *results, int count, const char *outdir);
 int load_profile(const char *path, profile_t *profile);
 int run_watch(int interval, const char *profile_path, int json, int csv, int html, const char *outdir);
+int send_webhook(const char *url, const char *outdir);
 
 #endif

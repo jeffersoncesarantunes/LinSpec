@@ -6,6 +6,10 @@ LDFLAGS=-pie -Wl,-z,relro,-z,now -Wl,-z,noexecstack -Wl,-z,separate-code
 TARGET=linspec
 SRC=src/main.c src/system_audit.c
 
+ifdef STATIC
+CFLAGS += -static
+endif
+
 .PHONY: all clean test install uninstall lint docker
 
 all: $(TARGET)

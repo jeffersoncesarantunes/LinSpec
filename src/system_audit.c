@@ -1060,3 +1060,42 @@ int run_watch(int interval, const char *profile_path, int json, int csv, int htm
 
     return 0;
 }
+
+int send_webhook(const char *url, const char *outdir)
+{
+    char path[MAX_PATH];
+    if (outdir) {
+        snprintf(path, sizeof(path), "%s/report.json", outdir);
+    } else {
+        snprintf(path, sizeof(path), "reports/report.json");
+    }
+
+    FILE *f = fopen(path, "r");
+    if (!f) {
+        printf("    " RED "x" RESET " Webhook failed: report.json not found at %s\n", path);
+        return -1;
+    }
+    fclose(f);
+
+    char cmd[MAX_PATH * 2];
+    int n = snprintf(cmd, sizeof(cmd),
+        "curl -s -X POST -H 'Content-Type: application/json'"
+        " -H 'X-API-Key: ${LINSPEC_API_KEY:-}'"
+        " --data-binary @%s '%s' >/dev/null 2>&1",
+        path, url);
+
+    if ((size_t)n >= sizeof(cmd)) {
+        printf("    " RED "x" RESET " Webhook URL too long\n");
+        return -1;
+    }
+
+    int ret = system(cmd);
+    if (ret == 0) {
+        printf("    " GRN "o" RESET " Report sent to %s\n", url);
+    } else if (ret == -1) {
+        printf("    " YEL "x" RESET " Webhook failed: curl not available\n");
+    } else {
+        printf("    " YEL "x" RESET " Webhook failed: curl exit %d\n", ret);
+    }
+    return ret;
+}

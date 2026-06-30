@@ -87,6 +87,7 @@ Options:
   -a, --apply           Apply remediation for VULN/WARN checks
   -f, --force           Skip confirmation prompt for --apply
   -w, --watch SEC       Watch mode with interval in seconds
+  -W, --webhook URL     POST JSON report to URL (uses LINSPEC_API_KEY env)
   -V, --version         Show version
   -h, --help            Show this help
 ```
@@ -108,6 +109,9 @@ sudo ./linspec -j -a -f
 
 # Watch mode (check every 300 seconds)
 sudo ./linspec -w 300 -j
+
+# Send JSON report to LinDash dashboard
+sudo LINSPEC_API_KEY=your-key ./linspec -j --webhook http://localhost:5000/api/scan
 ```
 
 ---

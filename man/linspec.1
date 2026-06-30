@@ -34,6 +34,11 @@ Load a named hardening profile from profiles/ directory.
 .B \--watch
 Monitor sysctl values continuously for changes.
 .TP
+.B \-W, \-\-webhook \fIurl\fR
+POST the JSON report to a URL via curl after audit.
+Uses LINSPEC_API_KEY environment variable for the
+X-API-Key header (e.g., for LinDash).
+.TP
 .B \--help
 Display this help message and exit.
 .SH FILES

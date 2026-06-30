@@ -18,6 +18,7 @@ static void print_usage(void)
     printf("  -f, --force           Skip confirmation prompt for --apply\n");
     printf("  -w, --watch SEC       Watch mode with interval in seconds\n");
     printf("  -V, --version         Show version\n");
+    printf("  -W, --webhook URL     POST JSON report to URL via curl\n");
     printf("  -h, --help            Show this help\n");
 }
 
@@ -31,8 +32,10 @@ int main(int argc, char **argv)
     int flag_force = 0;
     int flag_watch = 0;
     int watch_interval = 0;
+    int flag_webhook = 0;
     const char *output_dir = NULL;
     const char *profile_path = NULL;
+    const char *webhook_url = NULL;
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-j") == 0 || strcmp(argv[i], "--json") == 0) {
@@ -59,6 +62,11 @@ int main(int argc, char **argv)
             if (i + 1 < argc) {
                 watch_interval = atoi(argv[++i]);
                 if (watch_interval > 0) flag_watch = 1;
+            }
+        } else if (strcmp(argv[i], "-W") == 0 || strcmp(argv[i], "--webhook") == 0) {
+            if (i + 1 < argc) {
+                webhook_url = argv[++i];
+                flag_webhook = 1;
             }
         } else {
             printf("Unknown option: %s\n", argv[i]);
@@ -87,7 +95,7 @@ int main(int argc, char **argv)
     print_results(results, count);
     print_summary(results, count);
 
-    if (flag_json && export_json(results, count, output_dir) == 0) {
+    if ((flag_webhook || flag_json) && export_json(results, count, output_dir) == 0) {
         printf("    " GRN "o" RESET " JSON report generated\n");
     }
     if (flag_csv && export_csv(results, count, output_dir) == 0) {
@@ -95,6 +103,10 @@ int main(int argc, char **argv)
     }
     if (flag_html && export_html(results, count, output_dir) == 0) {
         printf("    " GRN "o" RESET " HTML report generated\n");
+    }
+
+    if (flag_webhook) {
+        send_webhook(webhook_url, output_dir);
     }
 
     if (flag_apply) {

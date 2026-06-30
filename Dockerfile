@@ -2,7 +2,7 @@ FROM alpine:3.24 AS builder
 RUN apk add --no-cache gcc musl-dev make
 WORKDIR /src
 COPY . ./
-RUN make
+RUN make clean all STATIC=1
 
 FROM scratch
 COPY --from=builder /src/linspec /linspec
