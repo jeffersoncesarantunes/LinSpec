@@ -1,24 +1,31 @@
 CC=gcc
-CFLAGS=-Isrc -Wall -Wextra -Wpedantic -O2 -std=c99 -D_FORTIFY_SOURCE=2 \
+CFLAGS=-Isrc -Iinclude -Wall -Wextra -Wpedantic -O2 -std=c99 -D_FORTIFY_SOURCE=2 \
        -fstack-protector-strong -fPIE -Wformat -Wformat-security \
        -Wconversion -Wsign-conversion -Wshadow -Wstrict-overflow=4
 LDFLAGS=-pie -Wl,-z,relro,-z,now -Wl,-z,noexecstack -Wl,-z,separate-code
 TARGET=linspec
+REMEDIATOR=remediator
 SRC=src/main.c src/system_audit.c
+REMEDIATOR_SRC=src/remediator.c
 
 ifdef STATIC
 CFLAGS += -static
 endif
 
-.PHONY: all clean test install uninstall lint docker
+.PHONY: all clean test install uninstall lint docker remediator
 
-all: $(TARGET)
+all: $(TARGET) $(REMEDIATOR)
 
 $(TARGET): $(SRC) src/checks.h
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(SRC)
 	@strip $(TARGET)
 	@echo "OK Build successful."
 	@mkdir -p profiles reports
+
+$(REMEDIATOR): $(REMEDIATOR_SRC) include/remediator.h
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(REMEDIATOR) $(REMEDIATOR_SRC)
+	@strip $(REMEDIATOR)
+	@echo "OK Remediation module built."
 
 debug: CFLAGS += -g -O0 -DDEBUG
 debug: LDFLAGS += -g
@@ -40,12 +47,13 @@ test_runner:
 
 MANDIR ?= $(DESTDIR)/usr/local/share/man/man1
 
-install: $(TARGET) install-man
+install: $(TARGET) $(REMEDIATOR) install-man
 	@install -m 0755 -d $(DESTDIR)/usr/local/bin
 	@install -m 0755 $(TARGET) $(DESTDIR)/usr/local/bin/$(TARGET)
+	@install -m 0755 $(REMEDIATOR) $(DESTDIR)/usr/local/bin/$(REMEDIATOR)
 	@install -m 0755 -d $(DESTDIR)/usr/local/share/linspec/profiles
 	@cp -r profiles/* $(DESTDIR)/usr/local/share/linspec/profiles/ 2>/dev/null || true
-	@echo "OK Installed to $(DESTDIR)/usr/local/bin/$(TARGET)"
+	@echo "OK Installed to $(DESTDIR)/usr/local/bin/$(TARGET), $(REMEDIATOR)"
 
 install-man:
 	@install -m 0755 -d $(MANDIR)
@@ -54,6 +62,7 @@ install-man:
 
 uninstall:
 	@rm -f $(DESTDIR)/usr/local/bin/$(TARGET)
+	@rm -f $(DESTDIR)/usr/local/bin/$(REMEDIATOR)
 	@rm -rf $(DESTDIR)/usr/local/share/linspec
 	@rm -f $(MANDIR)/linspec.1
 	@-rmdir $(MANDIR) 2>/dev/null; true
@@ -73,6 +82,6 @@ docker:
 	@echo "OK Docker image built: linspec:latest"
 
 clean:
-	@rm -f $(TARGET)
+	@rm -f $(TARGET) $(REMEDIATOR)
 	@rm -rf build/
 	@echo "Clean."
