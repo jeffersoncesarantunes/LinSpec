@@ -47,7 +47,7 @@ LinSpec audits the Linux kernel's security posture in real time. It reads from `
 - Watch mode with configurable interval (`--watch`)
 - Customizable profiles (JSON-based baselines)
 - HTML / JSON / CSV report export
-- Pure C99, zero dependencies
+- Pure C99, zero dependencies (optional: `curl` for `--webhook`)
 - Passive inspection (read-only by default)
 - PIE + RELRO + FORTIFY hardened binary
 

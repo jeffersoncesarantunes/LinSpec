@@ -23,10 +23,6 @@ Core audit engine. Contains:
 - **Export generators**: JSON, CSV, and self-contained HTML report generators
 - **Watch loop**: Continuous monitoring with configurable interval
 
-### memory_audit.c
-
-Legacy module for ASLR-specific checks. The current architecture routes all checks through system_audit.c's check table.
-
 ### checks.h
 
 Type definitions: result_t, category_t, op_t, check_def_t, check_result_t, profile_t. Function declarations for all public APIs.

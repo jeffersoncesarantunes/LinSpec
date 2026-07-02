@@ -18,6 +18,6 @@ jobs:
       - name: Verify binary
         run: ./linspec --help
       - name: Check for banned functions
-        run: '! grep -rn "\<gets(" src/ include/ || exit 1'
+        run: grep -rn "\<gets(" src/ include/ && exit 1 || true
       - name: Docker build
         run: make docker

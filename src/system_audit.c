@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/wait.h>
+#include <fcntl.h>
 #include "checks.h"
 
 static result_t check_entropy_fn(int *val, char *str, size_t sz);
@@ -22,7 +24,7 @@ static const check_def_t check_table[] = {
         "ASLR Full Randomization",
         2, OP_EQ, CAT_MEMORY, TYPE_INT,
         1, 2,
-        {{"CVE-2014-4910"}}, 1,
+        {{""}}, 0,
         NULL, VULN
     },
     {
@@ -40,7 +42,7 @@ static const check_def_t check_table[] = {
         "Yama Ptrace Scope",
         1, OP_GE, CAT_KERNEL, TYPE_INT,
         1, 1,
-        {{"CVE-2019-11477"}}, 1,
+        {{"CVE-2019-13272"}}, 1,
         NULL, WARN
     },
     {
@@ -58,7 +60,7 @@ static const check_def_t check_table[] = {
         "BPF JIT Hardening",
         2, OP_EQ, CAT_NETWORK, TYPE_INT,
         1, 2,
-        {{"CVE-2020-8835"}}, 1,
+        {{"CVE-2016-4557"}}, 1,
         NULL, WARN
     },
     {
@@ -67,7 +69,7 @@ static const check_def_t check_table[] = {
         "TCP SYN Cookie Protection",
         1, OP_EQ, CAT_NETWORK, TYPE_INT,
         1, 1,
-        {{"CVE-1999-1565"}}, 1,
+        {{""}}, 0,
         NULL, WARN
     },
     {
@@ -112,7 +114,7 @@ static const check_def_t check_table[] = {
         "Kexec Loading Disabled",
         1, OP_EQ, CAT_KERNEL, TYPE_INT,
         1, 1,
-        {{"CVE-2022-29582"}}, 1,
+        {{""}}, 0,
         NULL, WARN
     },
     {
@@ -121,7 +123,7 @@ static const check_def_t check_table[] = {
         "Perf Event Restrictions",
         2, OP_GE, CAT_KERNEL, TYPE_INT,
         1, 3,
-        {{"CVE-2023-2166"}}, 1,
+        {{"CVE-2013-2094"}}, 1,
         NULL, VULN
     },
     {
@@ -238,7 +240,7 @@ static const check_def_t check_table[] = {
         "Spectre V2 Mitigation",
         0, OP_CONTAINS, CAT_CPU, TYPE_STR,
         0, 0,
-        {{"CVE-2017-5715"}, {"CVE-2017-5753"}}, 2,
+        {{"CVE-2017-5715"}}, 1,
         check_spectre_fn, VULN
     },
     {
@@ -385,8 +387,12 @@ int run_all_checks(check_result_t *results, int max_results, const char *profile
     profile_t profile;
     int use_profile = 0;
 
-    if (profile_path && load_profile(profile_path, &profile) == 0) {
-        use_profile = 1;
+    if (profile_path) {
+        if (load_profile(profile_path, &profile) == 0) {
+            use_profile = 1;
+        } else {
+            fprintf(stderr, "    " YEL "[!] Warning: Failed to load profile '%s', using defaults\n" RESET, profile_path);
+        }
     }
 
     for (int i = 0; i < check_count && count < max_results; i++) {
@@ -421,6 +427,24 @@ int run_all_checks(check_result_t *results, int max_results, const char *profile
                 if (slen >= sizeof(r->current_str)) slen = sizeof(r->current_str) - 1;
                 memcpy(r->current_str, str, slen);
                 r->current_str[slen] = '\0';
+            }
+            if (use_profile && op != def->op) {
+                switch (op) {
+                    case OP_EQ:
+                        r->result = (val == expected) ? PASS : def->fail_result;
+                        break;
+                    case OP_GE:
+                        r->result = (val >= expected) ? PASS : def->fail_result;
+                        break;
+                    case OP_LE:
+                        r->result = (val <= expected) ? PASS : def->fail_result;
+                        break;
+                    case OP_NE:
+                        r->result = (val != expected) ? PASS : def->fail_result;
+                        break;
+                    default:
+                        break;
+                }
             }
         } else if (def->type == TYPE_INT) {
             if (read_int(def->path, &val) != 0) {
@@ -764,7 +788,7 @@ int export_csv(const check_result_t *results, int count, const char *outdir)
         else if (r->result == VULN) rs = "vuln";
         else if (r->result == SKIP) rs = "skip";
 
-        fprintf(f, "%d,%s,%s,%d,%d,%s\n",
+        fprintf(f, "%d,%s,%s,%d,%d,\"%s\"\n",
                 r->id, def->name, rs, r->current_val,
                 def->expected_val, r->current_str);
     }
@@ -882,10 +906,10 @@ int export_html(const check_result_t *results, int count, const char *outdir)
         fprintf(f, "<td class=\"%s\">%s</td>", status_class, status_str);
         if (def->type == TYPE_INT) {
             fprintf(f, "<td>%d</td><td>%d</td>", r->current_val, def->expected_val);
+            fprintf(f, "<td class=\"detail\">%s</td>", r->current_str[0] ? r->current_str : "-");
         } else {
-            fprintf(f, "<td colspan=\"2\">%s</td>", r->current_str[0] ? r->current_str : "-");
+            fprintf(f, "<td colspan=\"3\">%s</td>", r->current_str[0] ? r->current_str : "-");
         }
-        fprintf(f, "<td class=\"detail\">%s</td>", r->current_str[0] ? r->current_str : "-");
         fprintf(f, "<td class=\"cve\">");
         int cve_first = 1;
         for (int k = 0; k < def->cve_count; k++) {
@@ -1077,25 +1101,50 @@ int send_webhook(const char *url, const char *outdir)
     }
     fclose(f);
 
-    char cmd[MAX_PATH * 2];
-    int n = snprintf(cmd, sizeof(cmd),
-        "curl -s -X POST -H 'Content-Type: application/json'"
-        " -H 'X-API-Key: ${LINSPEC_API_KEY:-}'"
-        " --data-binary @%s '%s' >/dev/null 2>&1",
-        path, url);
+    const char *api_key = getenv("LINSPEC_API_KEY");
+    if (!api_key) api_key = "";
 
-    if ((size_t)n >= sizeof(cmd)) {
-        printf("    " RED "x" RESET " Webhook URL too long\n");
+    pid_t pid = fork();
+    if (pid == -1) {
+        printf("    " YEL "x" RESET " Webhook failed: fork error\n");
         return -1;
     }
 
-    int ret = system(cmd);
-    if (ret == 0) {
+    if (pid == 0) {
+        int fd = open("/dev/null", O_WRONLY);
+        if (fd != -1) {
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+            close(fd);
+        }
+
+        char api_header[512];
+        snprintf(api_header, sizeof(api_header), "X-API-Key: %s", api_key);
+
+        char data_opt[544];
+        snprintf(data_opt, sizeof(data_opt), "--data-binary@%s", path);
+
+        execlp("curl", "curl", "-s", "-X", "POST",
+               "-H", "Content-Type: application/json",
+               "-H", api_header,
+               data_opt,
+               url,
+               (char *)NULL);
+
+        _exit(127);
+    }
+
+    int status;
+    waitpid(pid, &status, 0);
+
+    if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
         printf("    " GRN "o" RESET " Report sent to %s\n", url);
-    } else if (ret == -1) {
+        return 0;
+    } else if (WIFEXITED(status) && WEXITSTATUS(status) == 127) {
         printf("    " YEL "x" RESET " Webhook failed: curl not available\n");
     } else {
-        printf("    " YEL "x" RESET " Webhook failed: curl exit %d\n", ret);
+        printf("    " YEL "x" RESET " Webhook failed: curl exit %d\n",
+               WIFEXITED(status) ? WEXITSTATUS(status) : -1);
     }
-    return ret;
+    return -1;
 }

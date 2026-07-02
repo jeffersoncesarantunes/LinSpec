@@ -2,7 +2,7 @@
 
 ## Purpose
 
-LinSpec fills the role of the Initial Triage Layer (Phase 0) in a digital forensic investigation.
+LinSpec fills the role of the Initial Triage Layer (Phase 1) in a digital forensic investigation.
 
 Before capturing volatile memory, you need to know whether the environment is safe to work with. LinSpec checks whether the kernel's defensive posture has been compromised and hands off the technical intelligence needed for safe memory acquisition.
 
@@ -45,9 +45,9 @@ Phase 3: K-Scanner (Analyze)  --> RWX detection + YARA
 
 | Phase | Tool | Output |
 |-------|------|--------|
-| Triage (Phase 0) | LinSpec | Kernel security baseline, JSON audit contract | 
-| Acquisition (Phase 1) | S.I.R.E.N | Validated forensic memory dump |
-| Analysis (Phase 2) | K-Scanner | Threat identification, rootkit detection |
+| Audit (Phase 1) | LinSpec | Kernel security baseline, JSON audit contract | 
+| Acquisition (Phase 2) | S.I.R.E.N | Validated forensic memory dump |
+| Analysis (Phase 3) | K-Scanner | Threat identification, rootkit detection |
 
 ---
 
