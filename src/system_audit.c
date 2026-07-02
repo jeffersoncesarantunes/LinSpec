@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200112L
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,6 +9,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include <sys/utsname.h>
 #include "checks.h"
 
 static result_t check_entropy_fn(int *val, char *str, size_t sz);
@@ -16,6 +18,10 @@ static result_t check_meltdown_fn(int *val, char *str, size_t sz);
 static result_t check_l1tf_fn(int *val, char *str, size_t sz);
 static result_t check_mds_fn(int *val, char *str, size_t sz);
 static result_t check_core_pattern_fn(int *val, char *str, size_t sz);
+
+static const char *category_names[] = {
+    "memory", "kernel", "network", "filesystem", "cpu", "crypto", "exec"
+};
 
 static const check_def_t check_table[] = {
     {
@@ -642,10 +648,40 @@ int apply_remediation(const check_result_t *results, int count, int force)
     return applied;
 }
 
+static int is_safe_path(const char *path)
+{
+    if (!path) return 1;
+    if (strstr(path, "..") != NULL) return 0;
+    return 1;
+}
+
+static void fprint_json_string(FILE *f, const char *s)
+{
+    fputc('"', f);
+    for (const unsigned char *cp = (const unsigned char *)s; *cp; cp++) {
+        switch (*cp) {
+            case '"': fputs("\\\"", f); break;
+            case '\\': fputs("\\\\", f); break;
+            case '\n': fputs("\\n", f); break;
+            case '\r': fputs("\\r", f); break;
+            case '\t': fputs("\\t", f); break;
+            default:
+                if (*cp < 0x20) {
+                    fprintf(f, "\\u%04x", *cp);
+                } else {
+                    fputc(*cp, f);
+                }
+                break;
+        }
+    }
+    fputc('"', f);
+}
+
 int export_json(const check_result_t *results, int count, const char *outdir)
 {
     char path[MAX_PATH];
     if (outdir) {
+        if (!is_safe_path(outdir)) return -1;
         snprintf(path, sizeof(path), "%s/report.json", outdir);
     } else {
         snprintf(path, sizeof(path), "reports/report.json");
@@ -672,11 +708,29 @@ int export_json(const check_result_t *results, int count, const char *outdir)
     time_t now = time(NULL);
     if (now == (time_t)-1) now = 0;
 
+    char hostname[256] = "unknown";
+    if (gethostname(hostname, sizeof(hostname)) != 0) {
+        strcpy(hostname, "unknown");
+    }
+    struct utsname uts;
+    const char *kernel_str = "";
+    const char *os_str = "";
+    if (uname(&uts) == 0) {
+        os_str = uts.sysname;
+        kernel_str = uts.release;
+    }
+
     fprintf(f, "{\n");
     fprintf(f, "  \"tool\": \"LinSpec\",\n");
     fprintf(f, "  \"version\": \"" LINSPEC_VERSION "\",\n");
     fprintf(f, "  \"timestamp\": %ld,\n", (long)now);
-    fprintf(f, "  \"checks\": [\n");
+    fprintf(f, "  \"hostname\": ");
+    fprint_json_string(f, hostname);
+    fprintf(f, ",\n  \"kernel\": ");
+    fprint_json_string(f, kernel_str);
+    fprintf(f, ",\n  \"os\": ");
+    fprint_json_string(f, os_str);
+    fprintf(f, ",\n  \"checks\": [\n");
 
     int first = 1;
     int p = 0, w = 0, v = 0, s = 0, e = 0;
@@ -697,24 +751,27 @@ int export_json(const check_result_t *results, int count, const char *outdir)
         first = 0;
 
         const char *rs = "error";
-        if (r->result == PASS) rs = "pass";
-        else if (r->result == WARN) rs = "warn";
-        else if (r->result == VULN) rs = "vuln";
-        else if (r->result == SKIP) rs = "skip";
+        const char *rs_upper = "ERROR";
+        if (r->result == PASS) { rs = "pass"; rs_upper = "PASS"; }
+        else if (r->result == WARN) { rs = "warn"; rs_upper = "WARN"; }
+        else if (r->result == VULN) { rs = "vuln"; rs_upper = "VULN"; }
+        else if (r->result == SKIP) { rs = "skip"; rs_upper = "SKIP"; }
 
         fprintf(f, "    {\n");
         fprintf(f, "      \"id\": %d,\n", r->id);
         fprintf(f, "      \"name\": \"%s\",\n", def->name);
         fprintf(f, "      \"result\": \"%s\",\n", rs);
+        fprintf(f, "      \"status\": \"%s\",\n", rs_upper);
+        fprintf(f, "      \"category\": \"%s\",\n", category_names[def->category]);
         fprintf(f, "      \"current\": %d,\n", r->current_val);
         fprintf(f, "      \"expected\": %d", def->expected_val);
         if (r->current_str[0]) {
-            fprintf(f, ",\n      \"detail\": \"");
-            for (const char *cp = r->current_str; *cp; cp++) {
-                if (*cp == '"' || *cp == '\\') fputc('\\', f);
-                fputc(*cp, f);
-            }
-            fprintf(f, "\"");
+            fprintf(f, ",\n      \"detail\": ");
+            fprint_json_string(f, r->current_str);
+            fprintf(f, ",\n      \"message\": ");
+            fprint_json_string(f, r->current_str);
+        } else {
+            fprintf(f, ",\n      \"message\": \"\"");
         }
         if (def->cve_count > 0 && def->cves[0][0]) {
             fprintf(f, ",\n      \"cves\": [");
@@ -749,6 +806,7 @@ int export_csv(const check_result_t *results, int count, const char *outdir)
 {
     char path[MAX_PATH];
     if (outdir) {
+        if (!is_safe_path(outdir)) return -1;
         snprintf(path, sizeof(path), "%s/report.csv", outdir);
     } else {
         snprintf(path, sizeof(path), "reports/report.csv");
@@ -770,7 +828,7 @@ int export_csv(const check_result_t *results, int count, const char *outdir)
     FILE *f = fopen(path, "w");
     if (!f) return -1;
 
-    fprintf(f, "id,name,result,current,expected,detail\n");
+    fprintf(f, "id,name,result,status,category,current,expected,detail\n");
     for (int i = 0; i < count; i++) {
         const check_result_t *r = &results[i];
         const check_def_t *def = NULL;
@@ -783,14 +841,15 @@ int export_csv(const check_result_t *results, int count, const char *outdir)
         if (!def) continue;
 
         const char *rs = "error";
-        if (r->result == PASS) rs = "pass";
-        else if (r->result == WARN) rs = "warn";
-        else if (r->result == VULN) rs = "vuln";
-        else if (r->result == SKIP) rs = "skip";
+        const char *rs_upper = "ERROR";
+        if (r->result == PASS) { rs = "pass"; rs_upper = "PASS"; }
+        else if (r->result == WARN) { rs = "warn"; rs_upper = "WARN"; }
+        else if (r->result == VULN) { rs = "vuln"; rs_upper = "VULN"; }
+        else if (r->result == SKIP) { rs = "skip"; rs_upper = "SKIP"; }
 
-        fprintf(f, "%d,%s,%s,%d,%d,\"%s\"\n",
-                r->id, def->name, rs, r->current_val,
-                def->expected_val, r->current_str);
+        fprintf(f, "%d,%s,%s,%s,%s,%d,%d,\"%s\"\n",
+                r->id, def->name, rs, rs_upper, category_names[def->category],
+                r->current_val, def->expected_val, r->current_str);
     }
 
     fclose(f);
@@ -801,6 +860,7 @@ int export_html(const check_result_t *results, int count, const char *outdir)
 {
     char path[MAX_PATH];
     if (outdir) {
+        if (!is_safe_path(outdir)) return -1;
         snprintf(path, sizeof(path), "%s/report.html", outdir);
     } else {
         snprintf(path, sizeof(path), "reports/report.html");
@@ -1089,6 +1149,7 @@ int send_webhook(const char *url, const char *outdir)
 {
     char path[MAX_PATH];
     if (outdir) {
+        if (!is_safe_path(outdir)) return -1;
         snprintf(path, sizeof(path), "%s/report.json", outdir);
     } else {
         snprintf(path, sizeof(path), "reports/report.json");

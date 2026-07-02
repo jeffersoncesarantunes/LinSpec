@@ -1,4 +1,6 @@
 linspec
+remediator
+main
 *.o
 *.out
 reports/
