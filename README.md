@@ -50,6 +50,7 @@ LinSpec audits the Linux kernel's security posture in real time. It reads from `
 - Pure C99, zero dependencies (optional: `curl` for `--webhook`)
 - Passive inspection (read-only by default)
 - PIE + RELRO + FORTIFY hardened binary
+- Natively compatible with [LinDash](https://github.com/jeffersoncesarantunes/LinDash) via `--webhook`
 
 ---
 
@@ -153,9 +154,11 @@ Built-in profiles:
 
 | Format | File | Content |
 |--------|------|---------|
-| JSON | `report.json` | Machine-readable with CVE mappings |
-| CSV | `report.csv` | Tabular for analysis |
+| JSON | `report.json` | Machine-readable with CVE mappings, hostname/kernel/os metadata, status/category/message per check |
+| CSV | `report.csv` | Tabular with id, name, result, status, category, current, expected, detail |
 | HTML | `report.html` | Self-contained dark-themed report |
+
+Each JSON check now includes `status` (PASS/WARN/VULN/SKIP), `category` (string), and `message` fields — natively compatible with [LinDash](https://github.com/jeffersoncesarantunes/LinDash).
 
 ---
 
@@ -202,6 +205,11 @@ make install      # install to /usr/local/bin
 ---
 
 ## Security
+
+- `--output-dir` rejects path traversal sequences (`..`)
+- Remediation requires root (`geteuid() != 0`)
+- No `system()` or `popen()` calls — all external execution via `execlp` with separate arguments
+- Binary built with PIE, RELRO, NOW, no-exec stack, `_FORTIFY_SOURCE=2`, stack protector
 
 [![Docs-Security](https://img.shields.io/badge/Security-Policy-CC0000?style=flat-square&logo=opensourceinitiative&logoColor=white)](SECURITY.md)
 
