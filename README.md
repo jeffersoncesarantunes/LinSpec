@@ -204,6 +204,43 @@ make install      # install to /usr/local/bin
 
 ---
 
+## Repository Structure
+
+```text
+├── docs/
+│   ├── architecture.md
+│   ├── audit_reference.md
+│   ├── forensic_methodology.md
+│   └── threat_model.md
+├── Images/
+│   ├── linspec1.png
+│   ├── linspec2.png
+│   └── linspec3.png
+├── include/
+│   └── remediator.h
+├── man/
+│   └── linspec.1
+├── profiles/
+│   ├── cis_benchmark.json
+│   └── default.json
+├── scripts/
+│   └── install.sh
+├── src/
+│   ├── checks.h
+│   ├── main.c
+│   ├── remediator.c
+│   └── system_audit.c
+├── tests/
+│   └── run_tests.sh
+├── Dockerfile
+├── LICENSE
+├── Makefile
+├── SECURITY.md
+└── README.md
+```
+
+---
+
 ## Security
 
 - `--output-dir` rejects path traversal sequences (`..`)
