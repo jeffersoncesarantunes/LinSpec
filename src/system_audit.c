@@ -388,7 +388,6 @@ static result_t check_core_pattern_fn(int *val, char *str, size_t sz)
 
 int run_all_checks(check_result_t *results, int max_results, const char *profile_path)
 {
-    (void)profile_path;
     int count = 0;
     profile_t profile;
     int use_profile = 0;
@@ -484,8 +483,6 @@ int run_all_checks(check_result_t *results, int max_results, const char *profile
                 memcpy(r->current_str, str, slen);
                 r->current_str[slen] = '\0';
                 if (op == OP_CONTAINS) {
-                    char check[64];
-                    snprintf(check, sizeof(check), "%d", expected);
                     r->result = (strstr(str, "Mitigation") || strstr(str, "Not affected"))
                         ? PASS : def->fail_result;
                 } else if (op == OP_ALWAYS) {
@@ -613,8 +610,9 @@ int apply_remediation(const check_result_t *results, int count, int force)
             printf("    " YEL "[?] Fix %s (set %s to %d)? [y/N]: " RESET,
                    def->name, def->path, def->remediate_val);
             int c = getchar();
+            int answer = c;
             while (c != '\n' && c != EOF) c = getchar();
-            if (c != 'y' && c != 'Y') {
+            if (answer != 'y' && answer != 'Y') {
                 printf("    " YEL "     Skipped.\n" RESET);
                 skipped++;
                 continue;
@@ -651,6 +649,7 @@ int apply_remediation(const check_result_t *results, int count, int force)
 static int is_safe_path(const char *path)
 {
     if (!path) return 1;
+    if (path[0] == '/') return 0;
     if (strstr(path, "..") != NULL) return 0;
     return 1;
 }
@@ -766,8 +765,6 @@ int export_json(const check_result_t *results, int count, const char *outdir)
         fprintf(f, "      \"current\": %d,\n", r->current_val);
         fprintf(f, "      \"expected\": %d", def->expected_val);
         if (r->current_str[0]) {
-            fprintf(f, ",\n      \"detail\": ");
-            fprint_json_string(f, r->current_str);
             fprintf(f, ",\n      \"message\": ");
             fprint_json_string(f, r->current_str);
         } else {
@@ -1163,7 +1160,7 @@ int send_webhook(const char *url, const char *outdir)
     fclose(f);
 
     const char *api_key = getenv("LINSPEC_API_KEY");
-    if (!api_key) api_key = "";
+    if (!api_key || api_key[0] == '\0') { printf("    " YEL "x" RESET " Webhook: LINSPEC_API_KEY not set\n"); return -1; }
 
     pid_t pid = fork();
     if (pid == -1) {

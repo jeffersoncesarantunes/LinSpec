@@ -305,9 +305,10 @@ int apply_remediation_plan(const remediation_plan_t *plan, int force) {
             printf("\033[33m[?] Fix %s (set %s to %d)? [y/N/a]: \033[0m",
                    r->name, r->sysctl_param, r->recommended_val);
             int c = getchar();
+            int answer = c;
             while (c != '\n' && c != EOF) c = getchar();
-            if (c == 'a' || c == 'A') { force = 1; }
-            else if (c != 'y' && c != 'Y') {
+            if (answer == 'a' || answer == 'A') { force = 1; }
+            else if (answer != 'y' && answer != 'Y') {
                 printf("\033[33m     Skipped.\033[0m\n");
                 skipped++;
                 continue;

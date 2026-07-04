@@ -33,10 +33,10 @@ LinSpec audits the Linux kernel's security posture in real time. It reads from `
 | Memory | ASLR, mmap_min_addr |
 | Kernel | kptr_restrict, ptrace_scope, dmesg_restrict, userns_clone, kexec_disabled, perf_event_paranoid, unpriv_bpf, ftrace_enabled, core_uses_pid, sysrq |
 | Network | bpf_jit_harden, tcp_syncookies, ip_forward, rp_filter, tcp_rfc1337, icmp_ignore_bogus, arp_ignore, arp_announce |
-| Filesystem | protected_symlinks, protected_hardlinks, core_pattern |
+| Filesystem | protected_symlinks, protected_hardlinks |
 | CPU | spectre_v2, meltdown, l1tf, mds |
 | Crypto | entropy_avail |
-| Exec | core_dump_safety |
+| Exec | core_pattern |
 
 ---
 
