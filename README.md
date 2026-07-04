@@ -67,7 +67,14 @@ LinSpec audits the Linux kernel's security posture in real time. It reads from `
 ```bash
 git clone https://github.com/jeffersoncesarantunes/LinSpec.git
 cd LinSpec
+
+# Build the project
+make
+
+# (Optional) Clean rebuild from scratch
 make clean && make
+
+# Run
 sudo ./linspec --json --csv --html
 ```
 
