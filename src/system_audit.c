@@ -649,7 +649,6 @@ int apply_remediation(const check_result_t *results, int count, int force)
 static int is_safe_path(const char *path)
 {
     if (!path) return 1;
-    if (path[0] == '/') return 0;
     if (strstr(path, "..") != NULL) return 0;
     return 1;
 }

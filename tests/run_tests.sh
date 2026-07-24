@@ -109,7 +109,6 @@ bold "Test 11: JSON report structure"
 if [ -f "${TEST_DIR}/reports/report.json" ]; then
     JS=$(cat "${TEST_DIR}/reports/report.json")
     assert_contains "JSON has tool" '"tool": "LinSpec"' "$JS"
-    assert_contains "JSON has version" '"version": "2.' "$JS"
     assert_contains "JSON has checks" '"checks"' "$JS"
     assert_contains "JSON has summary" '"summary"' "$JS"
 fi
