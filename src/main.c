@@ -6,7 +6,7 @@
 
 static void print_usage(void)
 {
-    printf(BOLD "LinSpec v" LINSPEC_VERSION " - Kernel Hardening Audit Tool\n" RESET);
+    printf(BOLD "LinSpec - Kernel Hardening Audit Tool\n" RESET);
     printf("Usage: linspec [options]\n\n");
     printf("Options:\n");
     printf("  -j, --json            Export JSON report\n");
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
         } else if (strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "--force") == 0) {
             flag_force = 1;
         } else if (strcmp(argv[i], "-V") == 0 || strcmp(argv[i], "--version") == 0) {
-            printf("LinSpec v" LINSPEC_VERSION "\n");
+            printf("LinSpec\n");
             return 0;
         } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
             print_usage();
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
                          flag_json, flag_csv, flag_html, output_dir);
     }
 
-    printf(BOLD "+---LinSpec v" LINSPEC_VERSION "----------------------------------------------------------+\n" RESET);
+    printf(BOLD "+---LinSpec"          "---------------------------------------------------------------------+\n" RESET);
     printf("  Forensic Kernel Hardening Audit\n");
     printf(BOLD "+-------------------------------------------------------------------------------+\n\n" RESET);
 

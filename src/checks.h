@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <time.h>
 
-#define LINSPEC_VERSION "2.0.0"
+
 #define MAX_NAME 64
 #define MAX_PATH 256
 #define MAX_CVE 8

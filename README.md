@@ -83,7 +83,7 @@ sudo ./linspec --json --csv --html
 ## Usage
 
 ```
-LinSpec v2.0.0 - Kernel Hardening Audit Tool
+LinSpec - Kernel Hardening Audit Tool
 Usage: linspec [options]
 
 Options:
